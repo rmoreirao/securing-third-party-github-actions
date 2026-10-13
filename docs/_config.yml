@@ -1,0 +1,38 @@
+title: Securing Third-Party GitHub Actions
+description: An opinionated guide for platform teams and developers on securely onboarding, adopting and monitoring third-party GitHub Actions at scale.
+url: https://rmoreirao.github.io
+baseurl: /securing-third-party-github-actions
+
+# Third-party code in the build is pinned to a full commit SHA too: just-the-docs v0.12.0.
+remote_theme: just-the-docs/just-the-docs@2ed4c0af735e95af5c0dcf7a605b07d903005b4e
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+
+color_scheme: light
+search_enabled: true
+heading_anchors: true
+back_to_top: true
+back_to_top_text: Back to top
+
+aux_links:
+  View on GitHub: https://github.com/rmoreirao/securing-third-party-github-actions
+aux_links_new_tab: true
+
+nav_external_links:
+  - title: Slides
+    url: /slides/
+    hide_icon: true
+    opens_in_new_tab: false
+  - title: Slides (PDF)
+    url: /slides/deck.pdf
+    hide_icon: true
+    opens_in_new_tab: false
+
+callouts:
+  note:
+    title: Note
+    color: blue
+
+exclude:
+  - slides/deck.md

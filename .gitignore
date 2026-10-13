@@ -1,0 +1,9 @@
+node_modules/
+_site/
+.jekyll-cache/
+.sass-cache/
+
+# Built by `npm run slides` locally and in CI
+docs/slides/index.html
+docs/slides/deck.pdf
+docs/slides/deck.pptx

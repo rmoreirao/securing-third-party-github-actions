@@ -1,0 +1,57 @@
+name: Publish site and slides
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Nothing by default. Each job asks only for what it needs.
+permissions: {}
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # Marp CLI comes from package-lock.json: pinned versions, verified checksums, no install scripts.
+      - name: Install Marp CLI
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      # Chrome's sandbox may not start on Ubuntu 24.04 runners. The runner is ephemeral and the deck is our own content.
+      - name: Build slides
+        env:
+          CHROME_NO_SANDBOX: "1"
+        run: npm run slides
+
+      - name: Build site
+        uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
+        with:
+          source: ./docs
+          destination: ./_site
+
+      - name: Upload site
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

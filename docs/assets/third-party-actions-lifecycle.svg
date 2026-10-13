@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="1625" viewBox="0 0 1240 1625" role="img" aria-labelledby="title description">
+<title id="title">The third-party GitHub Actions lifecycle, steps 0 to 7</title>
+<desc id="description">Step 0 bootstrap, step 1 request, step 2 onboarding through a trusted-publisher fast track (2a) or an isolated full review (2b), then approve and publish. Step 3 adoption and step 4 monitoring usage. Step 5 lifecycle management: version updates (5a) return to review, vulnerability management (5b) runs daily, deprecation and removal (5c) retires old SHAs. Step 6 compromise response contains and recovers. Step 7 break-glass grants a temporary, expiring exception.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker></defs>
+<rect width="1240" height="1625" fill="#ffffff"/>
+<rect x="40" y="405" width="1160" height="405" rx="24" fill="none" stroke="#868e96" stroke-width="1.5"/>
+<text x="60" y="436" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#000000">2 · ONBOARDING</text>
+<rect x="40" y="1160" width="780" height="390" rx="24" fill="none" stroke="#868e96" stroke-width="1.5"/>
+<text x="60" y="1191" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#000000">5 · LIFECYCLE MANAGEMENT</text>
+<rect x="850" y="1160" width="350" height="390" rx="24" fill="none" stroke="#868e96" stroke-width="1.5"/>
+<text x="870" y="1191" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="start" fill="#000000">6 · COMPROMISE RESPONSE</text>
+<rect x="440" y="125" width="360" height="90" rx="18" fill="#e7f5ff" stroke="#1864ab" stroke-width="2"/>
+<text x="620.0" y="163.5" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#000000">0 · BOOTSTRAP</text>
+<text x="620.0" y="190.0" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="middle" fill="#000000">Inventory, catalog, SHA pins</text>
+<rect x="440" y="265" width="360" height="90" rx="18" fill="#e7f5ff" stroke="#1864ab" stroke-width="2"/>
+<text x="620.0" y="303.5" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#000000">1 · REQUEST</text>
+<text x="620.0" y="330.0" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="middle" fill="#000000">Self-service: need, owner, access</text>
+<rect x="60" y="465" width="340" height="120" rx="18" fill="#f3d9fa" stroke="#862e9c" stroke-width="2"/>
+<text x="230.0" y="506.6" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#000000">2a · TRUSTED PUBLISHER</text>
+<text x="230.0" y="531.6" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">Fast track</text>
+<text x="230.0" y="556.2" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">1–2 business days</text>
+<rect x="840" y="465" width="340" height="120" rx="18" fill="#f3d9fa" stroke="#862e9c" stroke-width="2"/>
+<text x="1010.0" y="506.6" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#000000">2b · UNTRUSTED PUBLISHER</text>
+<text x="1010.0" y="531.6" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">Isolated copy + full review</text>
+<text x="1010.0" y="556.2" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">3–5 business days</text>
+<rect x="440" y="665" width="360" height="110" rx="18" fill="#e3fafc" stroke="#0c8599" stroke-width="2"/>
+<text x="620.0" y="701.9" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#000000">APPROVE + PUBLISH</text>
+<text x="620.0" y="727.3" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">Catalog + allowlist</text>
+<text x="620.0" y="752.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">Sponsor team assigned</text>
+<rect x="440" y="855" width="360" height="100" rx="18" fill="#e3fafc" stroke="#0c8599" stroke-width="2"/>
+<text x="620.0" y="899.2" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#000000">3 · ADOPTION</text>
+<text x="620.0" y="924.6" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">Teams test and use approved SHAs</text>
+<rect x="860" y="855" width="320" height="100" rx="18" fill="#fff3bf" stroke="#e67700" stroke-width="2" stroke-dasharray="8 6"/>
+<text x="1020.0" y="888.0" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="700" text-anchor="middle" fill="#000000">7 · BREAK-GLASS</text>
+<text x="1020.0" y="912.0" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Temporary SHA, two approvers</text>
+<text x="1020.0" y="935.2" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Expires in 7 days at most</text>
+<rect x="440" y="1005" width="360" height="100" rx="18" fill="#e3fafc" stroke="#0c8599" stroke-width="2"/>
+<text x="620.0" y="1049.2" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="700" text-anchor="middle" fill="#000000">4 · MONITORING USAGE</text>
+<text x="620.0" y="1074.6" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="middle" fill="#000000">Inventory, run evidence, SIEM alerts</text>
+<rect x="60" y="1225" width="320" height="100" rx="18" fill="#e7f5ff" stroke="#1864ab" stroke-width="2"/>
+<text x="220.0" y="1269.3" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#000000">5a · VERSION UPDATES</text>
+<text x="220.0" y="1292.8" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Feature, bug fix, security fix</text>
+<rect x="440" y="1225" width="360" height="100" rx="18" fill="#fff3bf" stroke="#e67700" stroke-width="2"/>
+<text x="620.0" y="1257.7" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#000000">5b · VULNERABILITY MANAGEMENT</text>
+<text x="620.0" y="1281.2" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Advisories, Dependabot, moved tags</text>
+<text x="620.0" y="1304.4" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Daily, trusted publishers included</text>
+<rect x="60" y="1400" width="320" height="100" rx="18" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+<text x="220.0" y="1444.3" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#000000">5c · DEPRECATION + REMOVAL</text>
+<text x="220.0" y="1467.8" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Warn, open PRs, remove on date</text>
+<rect x="870" y="1225" width="310" height="100" rx="18" fill="#fff5f5" stroke="#c92a2a" stroke-width="2"/>
+<text x="1025.0" y="1269.3" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#000000">CONFIRM + CONTAIN</text>
+<text x="1025.0" y="1292.8" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Block, stop runs, scope impact</text>
+<rect x="870" y="1400" width="310" height="120" rx="18" fill="#fff5f5" stroke="#c92a2a" stroke-width="2"/>
+<text x="1025.0" y="1442.7" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="700" text-anchor="middle" fill="#000000">RECOVER + LEARN</text>
+<text x="1025.0" y="1466.2" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Rotate, fix, roll back or replace</text>
+<text x="1025.0" y="1489.4" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="middle" fill="#000000">Fixed SHA re-enters review</text>
+<path d="M 620 223 L 620 257" fill="none" stroke="#1864ab" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 560 363 L 560 385 L 290 385 L 290 457" fill="none" stroke="#862e9c" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 680 363 L 680 385 L 950 385 L 950 457" fill="none" stroke="#862e9c" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 340 593 L 340 720 L 432 720" fill="none" stroke="#862e9c" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 900 593 L 900 720 L 808 720" fill="none" stroke="#862e9c" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 620 783 L 620 847" fill="none" stroke="#0c8599" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 852 905 L 808 905" fill="none" stroke="#e67700" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+<path d="M 620 963 L 620 997" fill="none" stroke="#0c8599" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 620 1113 L 620 1217" fill="none" stroke="#e67700" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 808 1055 L 1150 1055 L 1150 1217" fill="none" stroke="#c92a2a" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 432 1275 L 388 1275" fill="none" stroke="#e67700" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 808 1275 L 862 1275" fill="none" stroke="#c92a2a" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 220 1333 L 220 1392" fill="none" stroke="#495057" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 1025 1333 L 1025 1392" fill="none" stroke="#c92a2a" stroke-width="2" marker-end="url(#arrow)"/>
+<path d="M 52 1275 L 20 1275 L 20 310 L 432 310" fill="none" stroke="#1864ab" stroke-width="2" stroke-dasharray="8 6" marker-end="url(#arrow)"/>
+<text x="40" y="52.0" font-family="Segoe UI, Arial, sans-serif" font-size="32" font-weight="400" text-anchor="start" fill="#000000">Approval is the start, not the finish.</text>
+<text x="40" y="86.0" font-family="Segoe UI, Arial, sans-serif" font-size="18" font-weight="400" text-anchor="start" fill="#000000">Third-party GitHub Actions  |  Steps 0–7 match the guide  |  Two review lanes, one lifecycle</text>
+<text x="40" y="296.0" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#000000">Every new SHA returns to review</text>
+<text x="70" y="620.0" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#000000">Turnaround starts with</text>
+<text x="70" y="640.2" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#000000">a complete request.</text>
+<text x="925" y="620.0" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#000000">Failed review? Stop, explain,</text>
+<text x="925" y="640.2" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#000000">remediate. Don't publish.</text>
+<text x="830" y="1041.0" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#000000">Credible compromise</text>
+<text x="632" y="1143.0" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#000000">Every live SHA</text>
+<text x="398" y="1261.0" font-family="Segoe UI, Arial, sans-serif" font-size="14" font-weight="400" text-anchor="start" fill="#000000">Fix</text>
+<text x="232" y="1365.0" font-family="Segoe UI, Arial, sans-serif" font-size="15" font-weight="400" text-anchor="start" fill="#000000">Old SHA expires</text>
+<text x="450" y="1426.0" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#000000">Approval is not permanent.</text>
+<text x="450" y="1447.6" font-family="Segoe UI, Arial, sans-serif" font-size="16" font-weight="400" text-anchor="start" fill="#000000">Every approved SHA expires.</text>
+<text x="40" y="1592.0" font-family="Segoe UI, Arial, sans-serif" font-size="17" font-weight="400" text-anchor="start" fill="#000000">Platform team owns the process and tooling. Dev teams sponsor, adopt and remediate.</text>
+</svg>
