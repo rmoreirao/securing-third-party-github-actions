@@ -267,7 +267,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Prologue: The incident (Why This Matters)
 
-> March 2025. Sam, on call in Contoso's security team, spots the build bot cloning private repositories from IP addresses nobody knows. The trail leads to `tj-actions/changed-files`, used by tag in 24 Contoso repositories, three of them public. For about a day, those tags pointed at a commit that dumped the runner's secrets into the logs.
+> March 2025. Sam (Security), on call in Contoso's security team, spots the build bot cloning private repositories from IP addresses nobody knows. The trail leads to `tj-actions/changed-files`, used by tag in 24 Contoso repositories, three of them public. For about a day, those tags pointed at a commit that dumped the runner's secrets into the logs.
 
 **What really happened** (public record):
 
@@ -290,7 +290,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Chapter 1: Meet Contoso (Context and Assumptions)
 
-> The post-mortem reaches the CTO on a Thursday. On Friday, Marta, who leads the GitHub Enterprise platform team, gets her brief: "Make every third-party action we run safe, without slowing teams down."
+> The post-mortem reaches the CTO on a Thursday. On Friday, Marta (Platform), who leads the GitHub Enterprise platform team, gets her brief: "Make every third-party action we run safe, without slowing teams down."
 
 **The company**
 
@@ -316,7 +316,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Chapter 2: The cast and the map (Roles, Responsibilities and the End-to-End Process)
 
-> Marta writes the cast on the whiteboard before drawing a single box. "If a step has no owner, it won't happen."
+> Marta (Platform) writes the cast on the whiteboard before drawing a single box. "If a step has no owner, it won't happen."
 
 **The cast**
 
@@ -362,7 +362,7 @@ The numbers in the diagram are the steps in the chapter headings. Two review lan
 
 ### Chapter 3: Cleaning house (Step 0 · Bootstrap)
 
-> April 2025. Marta's first inventory finds 1,800 `uses:` lines pointing at 350 different third-party actions. Two thirds use a tag. Twenty-two of them do the same thing: post to Slack.
+> April 2025. Marta's (Platform) first inventory finds 1,800 `uses:` lines pointing at 350 different third-party actions. Two thirds use a tag. Twenty-two of them do the same thing: post to Slack.
 
 **Who:** the platform team, with dev teams merging the pull requests · **When:** once, one organization at a time
 
@@ -425,7 +425,7 @@ Every future SHA from that repository is now allowed without review. That's the 
 2. **Copy the SHA into the Review GHE**, one repository per SHA, named `{repo}-{sha}` (shorten the SHA if the name gets too long). The default branch points at the approved SHA, and GitHub Advanced Security is on.
 3. **Run the checks:** GitHub Advanced Security, the Advisory Database, Scorecard, zizmor and an AI review, then the [onboarding checklist](#onboarding-checklist).
 4. **Stop on a blocking finding**, and post what failed on the request.
-5. **Decide together.** Marta and Ana go through the results: approve, approve with restrictions, or reject. The security team joins when the action needs secrets, write access or OIDC.
+5. **Decide together.** Marta (Platform) and Ana (Sponsor) go through the results: approve, approve with restrictions, or reject. The security team joins when the action needs secrets, write access or OIDC.
 6. **Publish.** Merge the catalog entry with Payments as the sponsor. Automation adds `owner/repo@<sha>` to the allowlist.
 7. **Test it.** The sponsor tries it in a non-production workflow first.
 
@@ -437,7 +437,7 @@ Every future SHA from that repository is now allowed without review. That's the 
 
 ### Chapter 6: Going live (Step 3 · Adopting Approved Actions)
 
-> Ana pastes the snippet into her workflow. The policy check fails: the same job holds `KUBECONFIG_PROD`, and the catalog says this action gets no secrets. She moves the diff into its own job, and the check goes green.
+> Ana (Sponsor) pastes the snippet into her workflow. The policy check fails: the same job holds `KUBECONFIG_PROD`, and the catalog says this action gets no secrets. She moves the diff into its own job, and the check goes green.
 
 **Who:** every team using the action · **When:** it's in the catalog
 
@@ -496,7 +496,7 @@ Build it with a script that reads the catalog, OPA or Conftest policies, or zizm
 
 ### Chapter 7: Watching the fleet (Step 4 · Monitoring Usage)
 
-> October 2025. Sam's dashboard flags a job that runs `helm-diff-action` and received `NPM_TOKEN`. The policy check only looked at job-level `env:`, and a workflow-level block handed the token to every job. The team fixes it that afternoon. Marta fixes the check the next day.
+> October 2025. Sam's dashboard flags a job that runs `helm-diff-action` and received `NPM_TOKEN`. The policy check only looked at job-level `env:`, and a workflow-level block handed the token to every job. The team fixes it that afternoon. Marta (Platform) fixes the check the next day.
 
 **Who:** the platform team, with the security team running the detections · **When:** all the time
 
@@ -522,11 +522,11 @@ Detections worth starting with:
 
 **Done when:** for any action, you can answer every question above in minutes.
 
-Keeping secrets away from third-party actions takes layers. Design them out with split jobs, environment secrets and OIDC. Catch mistakes in the pull request with the policy check. Catch the rest in the audit log, like Sam just did.
+Keeping secrets away from third-party actions takes layers. Design them out with split jobs, environment secrets and OIDC. Catch mistakes in the pull request with the policy check. Catch the rest in the audit log, like Sam (Security) just did.
 
 ### Chapter 8: Versions come and go (Step 5 · Lifecycle Management)
 
-> November 2025. Fabrikam ships v2.6.0 with OCI chart support, and Ana asks for it. Three days later it's approved, and v2.5.0 gets an expiry date in February. A week after that, pull requests land in every repository using it. By February nobody's left on v2.5.0, and it leaves the allowlist without anyone noticing.
+> November 2025. Fabrikam ships v2.6.0 with OCI chart support, and Ana (Sponsor) asks for it. Three days later it's approved, and v2.5.0 gets an expiry date in February. A week after that, pull requests land in every repository using it. By February nobody's left on v2.5.0, and it leaves the allowlist without anyone noticing.
 
 #### Updates (5a · Version Updates)
 
@@ -564,7 +564,7 @@ No fix by the deadline? Replace the action, or use break-glass.
 
 ### Chapter 9: A compromised action (Step 6 · Compromised Action Response)
 
-> February 2026. At 10:12 on a Monday, Sam's SIEM lights up: self-hosted runners keep blocking calls to an unknown domain whenever `helm-diff-action` v2.6.0 runs. At 10:30, Fabrikam confirms it: a dependency bundled into v2.6.0 carried a dormant payload that woke up over the weekend. At 10:41, the action is blocked across Contoso.
+> February 2026. At 10:12 on a Monday, Sam's (Security) SIEM lights up: self-hosted runners keep blocking calls to an unknown domain whenever `helm-diff-action` v2.6.0 runs. At 10:30, Fabrikam confirms it: a dependency bundled into v2.6.0 carried a dormant payload that woke up over the weekend. At 10:41, the action is blocked across Contoso.
 
 **Who:** the platform team leads, teams rotate, the security team investigates · **When:** a credible signal, from an advisory, a SIEM alert, a moved tag or a community report
 
@@ -592,7 +592,7 @@ The review didn't catch this one. A dormant payload looks harmless until it wake
 
 ### Chapter 10: Breaking the glass (Step 7 · Break-Glass Exceptions)
 
-> The next morning, Payments is stuck. The Helm diff is a required check, and every pull request is red. Ana asks to roll back to v2.5.0, which is clean but expired. Marta and Sam approve it for 7 days, in Payments repositories only, with no secrets and on egress-controlled runners. Three days later Fabrikam ships a clean v2.6.1. As a security fix it skips the wait but not the review, Payments moves to it, and the exception expires on its own.
+> The next morning, Payments is stuck. The Helm diff is a required check, and every pull request is red.  Ana (Sponsor) asks to roll back to v2.5.0, which is clean but expired. Marta (Platform) and Sam (Security) approve it for 7 days, in Payments repositories only, with no secrets and on egress-controlled runners. Three days later Fabrikam ships a clean v2.6.1. As a security fix it skips the wait but not the review, Payments moves to it, and the exception expires on its own.
 
 **Who:** the platform and security teams approve, and the team asking owns the risk · **When:** delivery is blocked and the normal route is too slow
 
@@ -609,7 +609,7 @@ Never use break-glass for a compromised SHA, or for code nobody has reviewed. Fo
 
 ### Epilogue: One year later (Outcomes and Lessons Learned)
 
-> March 2026. Marta shows the CTO where things stand.
+> March 2026. Marta (Platform) shows the CTO where things stand.
 
 | | Before | Now |
 |---|---|---|
