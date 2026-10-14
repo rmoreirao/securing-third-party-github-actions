@@ -13,6 +13,21 @@
   max-width: none;
 }
 
+// Include the theme's desktop gutters around the reading column.
+.main-content-wrap {
+  max-width: 53rem + (2 * $gutter-spacing);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.main-content .table-wrapper {
+  width: fit-content;
+}
+
+.main-content table {
+  min-width: 0;
+}
+
 // The site title is long, so keep it on two lines in the sidebar header.
 .site-title {
   font-size: 1.125rem !important;

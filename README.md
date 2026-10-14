@@ -34,7 +34,9 @@ One known gap: `actions/jekyll-build-pages` runs a container image referenced by
 
 ### Site layout
 
-The desktop sidebar is fixed at `14rem` (224px at the default font size). Adjust `$nav-width` in [`docs/_sass/custom/setup.scss`](docs/_sass/custom/setup.scss) to resize it. The layout overrides in [`docs/_sass/custom/custom.scss`](docs/_sass/custom/custom.scss) prevent the theme from adding an extra sidebar gutter on wide screens and let the article fill the remaining viewport width, with normal content padding. The mobile menu is unchanged.
+The desktop sidebar is fixed at `14rem` (224px at the default font size). Adjust `$nav-width` in [`docs/_sass/custom/setup.scss`](docs/_sass/custom/setup.scss) to resize it. The layout overrides in [`docs/_sass/custom/custom.scss`](docs/_sass/custom/custom.scss) prevent the theme from adding an extra sidebar gutter on wide screens and center the article within the remaining viewport space. The reading column is capped at `53rem` (848px at the default font size), plus the theme's normal content padding. On narrower screens, it shrinks to fit. The mobile menu is unchanged.
+
+Tables size to their content rather than stretching across the reading column. Wide tables retain the theme's horizontal scrolling inside their own container, without widening the page.
 
 ## Build locally
 
