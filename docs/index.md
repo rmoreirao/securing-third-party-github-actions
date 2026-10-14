@@ -116,9 +116,9 @@ Where to do the review:
 
 | Option | Isolation | Trade-off |
 |---|---|---|
-| A separate GHE instance | Strongest | One more instance to run |
-| A locked-down organization | Medium | Shares the enterprise's policies and admins |
-| A throwaway sandbox per review | Medium | Nothing keeps scanning afterwards |
+| A separate GHE instance | Strongest | One more GHE instance to run. |
+| A locked-down organization | Medium | Shares the enterprise's policies and admins. If "Allow Enterprise Actions" is enabled, it may bypass  isolation. |
+| A throwaway sandbox per review | Medium | Nothing keeps scanning afterwards, so lifecycle management and continuous security assessment is not being performed by your team. |
 
 #### Keep tokens and secrets on a short leash
 
