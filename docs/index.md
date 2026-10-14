@@ -494,7 +494,7 @@ Build it with a script that reads the catalog, OPA or Conftest policies, or zizm
 
 ### Chapter 7: Watching the fleet (Step 4 · Monitoring Usage)
 
-> October 2025. Sam's dashboard flags a job that runs `helm-diff-action` and received `NPM_TOKEN`. The policy check only looked at job-level `env:`, and a workflow-level block handed the token to every job. The team fixes it that afternoon. Marta (Platform) fixes the check the next day.
+> October 2025. Sam's (Security) dashboard flags a job that runs `helm-diff-action` and received `NPM_TOKEN`. The policy check only looked at job-level `env:`, and a workflow-level block handed the token to every job. The team fixes it that afternoon. Marta (Platform) fixes the check the next day.
 
 **Who:** the platform team, with the security team running the detections · **When:** all the time
 
