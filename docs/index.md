@@ -420,17 +420,16 @@ Every future SHA from that repository is now allowed without review. That's the 
 
 **Who:** the platform team with the sponsor, plus the security team for risky cases · **When:** any other publisher
 
-1. **Check the basics.** The repository is at least 2 months old. The SHA is at least 7 days old and reachable from an upstream branch or tag. The repository isn't archived, and the license is acceptable. If anything's off, reject it and say why.
-2. **Copy the SHA into the Review GHE**, one repository per SHA, named `{repo}-{sha}` (shorten the SHA if the name gets too long). The default branch points at the approved SHA, and GitHub Advanced Security is on.
-3. **Run the checks:** GitHub Advanced Security, the Advisory Database, Scorecard, zizmor and an AI review, then the [onboarding checklist](#onboarding-checklist).
-4. **Stop on a blocking finding**, and post what failed on the request.
-5. **Decide together.** Marta (Platform) and Ana (Sponsor) go through the results: approve, approve with restrictions, or reject. The security team joins when the action needs secrets, write access or OIDC.
-6. **Publish.** Merge the catalog entry with Payments as the sponsor. Automation adds `owner/repo@<sha>` to the allowlist.
-7. **Test it.** The sponsor tries it in a non-production workflow first.
+1. **Mirror the approved commit into the Review GHE**, one repository per approved SHA, named `{repo}-{sha}` (shorten the SHA in the repository name if needed). Preserve the original Git history so the approved commit retains its upstream SHA. Point the default branch at that commit, and enable GitHub Advanced Security.
+2. **Run the checks:** GitHub Advanced Security, the Advisory Database, Scorecard, zizmor and an AI review, then the [onboarding checklist](#onboarding-checklist).
+3. **Stop on a blocking finding**, and post what failed on the request.
+4. **Decide together.** Marta (Platform) and Ana (Sponsor) go through the results: approve, approve with restrictions, or reject. The security team joins when the action needs secrets, write access or OIDC.
+5. **Publish.** Merge the catalog entry with Payments as the sponsor. Automation adds `owner/repo@<sha>` to the allowlist.
+6. **Test it.** The sponsor tries it in a non-production workflow first.
 
 **Done when:** it's approved and allowlisted, or rejected with reasons, within 3–5 business days.
 
-**Why one repository per SHA?** Dependabot and CodeQL only scan the default branch, so one copy per SHA keeps every approved SHA under watch. Each copy is also a record of exactly what was approved, and a backup if the upstream disappears. Teams then switch their workflows to the copy.
+**Why one repository per SHA?** Default behavior of Dependabot and CodeQL is to scan the default branch only, so one copy per SHA keeps every approved SHA under watch. Each copy is also a record of exactly what was approved, and a backup if the upstream disappears. Teams then switch their workflows to the copy.
 
 **Why not mirror everything?** Workflows use the upstream at an exact SHA, which keeps things simple, and the Review GHE copy covers the "upstream vanished" risk. Contoso moves an action to a mirror or an internal wrapper only when it's critical enough to justify the work.
 
