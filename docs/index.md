@@ -358,7 +358,6 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ![The lifecycle of a third-party GitHub Action at Contoso](assets/third-party-actions-lifecycle.svg)
 
-The numbers in the diagram are the steps in the chapter headings. Two review lanes, one lifecycle: every new SHA, whether it's a new action, an update or a security fix, goes back through review. Break-glass (7) sits on the side, because it's the exception.
 
 ### Chapter 3: Cleaning house (Step 0 · Bootstrap)
 
