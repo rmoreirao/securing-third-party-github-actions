@@ -43,8 +43,7 @@ Every `uses:` line in a workflow runs someone else's code next to your source co
 - **Let every approval expire.** Old SHAs leave. Exceptions too.
 - **Be ready for the day an action goes bad.** Block in minutes, rotate everything, rehearse.
 
-**Who owns what:** the platform team runs the process and the tooling. The dev team that asked for an action sponsors it, and shares the job of keeping it safe and up to date.
-
+**Who owns what:** the platform team runs the process and the tooling. The dev team that asked for an action sponsors it, and shares the job of keeping it safe and up to date. The security team watches what runs, and joins on risky requests and incidents. None of them can do it alone.
 ### What this covers (and what it doesn't)
 
 This guide is about **third-party actions**: any `uses: owner/repo@ref` that lives outside your enterprise. That includes GitHub's own `actions/*`, Microsoft and Azure actions, everything on the Marketplace, and whatever those actions pull in when they run: nested actions, container images and downloaded tools.
@@ -277,6 +276,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 **What it cost Contoso** (fictional): an organization-wide bot token leaked through a public log, and with it the attacker cloned the source code of two products. Finding every workflow that used the action took four days. Nobody knew which job held which secret, so more than 250 credentials were rotated, just in case. Blocking the action took a day, because nobody owned the Actions policy.
 
+**Why it took so long** (fictional): three teams each held part of the answer, and none of them knew it. Security had flagged unpinned actions in a quarterly report that nobody outside security read. The platform team had SHA pinning on its backlog, waiting for a business case. Dev teams had stopped asking and built their own fixes. On the day, Sam (Security) spent the first three hours finding out who could change the Actions policy.
 | What went wrong | What was missing |
 |---|---|
 | A moved tag delivered malicious code | An allowlist and SHA pinning |
@@ -290,7 +290,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Chapter 1: Meet Contoso (Context and Assumptions)
 
-> The post-mortem reaches the CTO on a Thursday. On Friday, Marta (Platform), who leads the GitHub Enterprise platform team, gets her brief: "Make every third-party action we run safe, without slowing teams down."
+> The post-mortem reaches the CTO on a Thursday. Its first finding isn't technical: platform, security and dev teams each saw part of the problem, and nobody saw all of it. On Friday, Marta (Platform), who leads the GitHub Enterprise platform team, gets her brief: "Make every third-party action we run safe, without slowing teams down. And do it with Sam and the dev teams, not for them."
 
 **The company**
 
@@ -313,10 +313,11 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 - The audit log streams to Microsoft Sentinel, with automated detections ([GHESentinelAutomation](https://github.com/rmoreirao/GHESentinelAutomation)).
 - Workflows use the vetted upstream. The Review GHE keeps a copy of every approved SHA.
 - The platform team runs the process. Once an action is in, its lifecycle is shared with the sponsor team.
+- One process, end to end. Security and dev teams have a named role in every step, and everyone shares one channel for third-party actions.
 
 ### Chapter 2: The cast and the map (Roles, Responsibilities and the End-to-End Process)
 
-> Marta (Platform) writes the cast on the whiteboard before drawing a single box. "If a step has no owner, it won't happen."
+> For the first time, the three teams are in one room. Sam (Security) brings detections nobody else had seen. Ana (Payments), speaking for the dev teams, brings a list of what teams actually need. Marta (Platform) writes the cast on the whiteboard before drawing a single box. "If a step has no owner, it won't happen." Sam adds: "And if the owners don't talk, it won't work."
 
 **The cast**
 
@@ -361,7 +362,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Chapter 3: Cleaning house (Step 0 · Bootstrap)
 
-> April 2025. Marta's (Platform) first inventory finds 1,800 `uses:` lines pointing at 350 different third-party actions. Two thirds use a tag. Twenty-two of them do the same thing: post to Slack.
+> April 2025. Marta's (Platform) first inventory finds 1,800 `uses:` lines pointing at 350 different third-party actions. Two thirds use a tag. Twenty-two of them do the same thing: post to Slack. Twenty-two teams solved the same problem, and none of them asked the others.
 
 **Who:** the platform team, with dev teams merging the pull requests · **When:** once, one organization at a time
 
@@ -494,7 +495,7 @@ Build it with a script that reads the catalog, OPA or Conftest policies, or zizm
 
 ### Chapter 7: Watching the fleet (Step 4 · Monitoring Usage)
 
-> October 2025. Sam's (Security) dashboard flags a job that runs `helm-diff-action` and received `NPM_TOKEN`. The policy check only looked at job-level `env:`, and a workflow-level block handed the token to every job. The team fixes it that afternoon. Marta (Platform) fixes the check the next day.
+> October 2025. Sam's (Security) dashboard flags a job that runs `helm-diff-action` and received `NPM_TOKEN`. The policy check only looked at job-level `env:`, and a workflow-level block handed the token to every job. The team fixes it that afternoon. Marta (Platform) fixes the check the next day. Before the incident, that alert would have stayed in a security queue.
 
 **Who:** the platform team, with the security team running the detections · **When:** all the time
 
@@ -590,7 +591,7 @@ No fix by the deadline? Replace the action, or use break-glass.
 
 ### Chapter 9: A compromised action (Step 6 · Compromised Action Response)
 
-> February 2026. At 10:12 on a Monday, Sam's (Security) SIEM lights up: self-hosted runners keep blocking calls to an unknown domain whenever `helm-diff-action` v2.6.0 runs. At 10:30, Fabrikam confirms it: a dependency bundled into v2.6.0 carried a dormant payload that woke up over the weekend. At 10:41, the action is blocked across Contoso.
+> February 2026. At 10:12 on a Monday, Sam's (Security) SIEM lights up: self-hosted runners keep blocking calls to an unknown domain whenever `helm-diff-action` v2.6.0 runs. At 10:14, Sam opens the incident in the shared channel. Marta (Platform) and Ana (Sponsor) are already there. At 10:30, Fabrikam confirms it: a dependency bundled into v2.6.0 carried a dormant payload that woke up over the weekend. At 10:41, the action is blocked across Contoso.
 
 **Who:** the platform team leads, teams rotate, the security team investigates · **When:** a credible signal, from an advisory, a SIEM alert, a moved tag or a community report
 
@@ -609,6 +610,7 @@ No fix by the deadline? Replace the action, or use break-glass.
 
 | | Prologue (2025) | Chapter 9 (2026) |
 |---|---|---|
+| The first hour | Finding out who owned the policy | Blocking the action |
 | Time to block | A day | 29 minutes |
 | Finding affected runs | Four days | One query |
 | Credentials rotated | 250+ | 1 |
@@ -635,7 +637,7 @@ Never use break-glass for a compromised SHA, or for code nobody has reviewed. Fo
 
 ### Epilogue: One year later (Outcomes and Lessons Learned)
 
-> March 2026. Marta (Platform) shows the CTO where things stand.
+> March 2026. Marta (Platform), Sam (Security) and Ana (Payments) show the CTO where things stand. A year ago, they had never been in the same meeting.
 
 | | Before | Now |
 |---|---|---|
@@ -646,11 +648,12 @@ Never use break-glass for a compromised SHA, or for code nobody has reviewed. Fo
 | Expired SHAs still in use | Unknown | None |
 | Time to block a compromised action | A day | 29 minutes |
 
-Three lessons from the year:
+Four lessons from the year:
 
 - **Speed is a security feature.** Once requests took days instead of weeks, people stopped working around the process.
 - **Review lowers the risk. It doesn't remove it.** The compromise in Chapter 9 got through review. Keeping secrets out of the job and controlling egress is what made it a non-event.
 - **Write the runbook down.** The first drill showed the blocking steps lived in one person's head.
+- **Security is a chain, not a team.** The platform team builds the controls, dev teams keep their workflows inside them, and security watches what actually ran. Chapter 9 took all three teams, in one channel, within the hour.
 
 Approval is the start, not the finish.
 
