@@ -633,20 +633,25 @@ Approval is the start, not the finish.
 
 ### Onboarding checklist
 
-- [ ] All nested actions are pinned to a full SHA and onboarded in their own right.
-- [ ] Container images are pinned by digest and scanned.
-- [ ] Docker actions using `image: Dockerfile` build from digest-pinned base images, not from a base that changes on every run.
-- [ ] `dist/` rebuilds from source and matches what's committed.
-- [ ] No runtime downloads (`curl | bash`, `npx`, unpinned `docker run`), or each one is pinned and checksum-verified.
-- [ ] `pre` and `post` hooks are read and understood.
-- [ ] The repository is at least 2 months old, and the SHA at least 7 days old (security fixes excepted).
-- [ ] The SHA is reachable from an upstream branch or tag, not only from a fork.
-- [ ] The permissions and secrets it needs are recorded, so the policy check can enforce them.
-- [ ] The license is acceptable.
-- [ ] CodeQL, Dependabot, secret scanning, the Advisory Database and zizmor come back clean, and Scorecard has been reviewed.
-- [ ] The AI review has been read.
-- [ ] The scanned SHA is exactly the SHA you allowlist, and it's recorded in the catalog.
-- [ ] The action has a [lockfile](https://gh-actions-lockfile.net/) pinning its dependencies. A warning for now, while adoption grows.
+This is a reference checklist, not an exhaustive list. Adapt and extend it to match your organization's threat model, policies and environment.
+
+**Criticality:** **Critical** items can let untrusted code run or expose secrets, so never waive them. **High** items materially raise the risk; waive one only with a documented, time-limited exception. **Medium** items have a lower security impact or are compliance requirements. **Low** items are advisory and don't block onboarding.
+
+- [ ] **Critical** — All nested actions are pinned to a full SHA and onboarded in their own right.
+- [ ] **Critical** — Container images are pinned by digest and scanned.
+- [ ] **Critical** — Docker actions using `image: Dockerfile` build from digest-pinned base images, not from a base that changes on every run.
+- [ ] **Critical** — `dist/` rebuilds from source and matches what's committed.
+- [ ] **Critical** — No runtime downloads (`curl | bash`, `npx`, unpinned `docker run`), or each one is pinned and checksum-verified.
+- [ ] **Critical** — The SHA is reachable from an upstream branch or tag, not only from a fork.
+- [ ] **Critical** — The GitHub Advisory Database has no advisory for the action at the pinned SHA.
+- [ ] **Critical** — The permissions and secrets it needs are recorded, so the policy check can enforce them.
+- [ ] **Critical** — The scanned SHA is exactly the SHA you allowlist, and it's recorded in the catalog.
+- [ ] **High** — `pre` and `post` hooks are read and understood.
+- [ ] **High** — The repository is at least 2 months old, and the SHA at least 7 days old (security fixes excepted).
+- [ ] **High** — CodeQL, Dependabot, secret scanning and zizmor come back clean, and Scorecard has been reviewed.
+- [ ] **Medium** — The license is acceptable.
+- [ ] **Low** — The AI review has been read. It's advice only.
+- [ ] **Low** — The action has a [lockfile](https://gh-actions-lockfile.net/) pinning its dependencies. A warning for now, while adoption grows.
 
 ### Request form
 
