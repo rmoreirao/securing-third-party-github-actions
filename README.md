@@ -32,6 +32,10 @@ One known gap: `actions/jekyll-build-pages` runs a container image referenced by
 | [`docs/assets/`](docs/assets/) | The lifecycle diagram |
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Builds the slides and the site, then deploys to GitHub Pages on every push to `main` |
 
+### Site layout
+
+The desktop sidebar is fixed at `14rem` (224px at the default font size). Adjust `$nav-width` in [`docs/_sass/custom/setup.scss`](docs/_sass/custom/setup.scss) to resize it. The layout override in [`docs/_sass/custom/custom.scss`](docs/_sass/custom/custom.scss) prevents the theme from adding an extra sidebar gutter on wide screens; the mobile menu is unchanged.
+
 ## Build locally
 
 **Slides** need Node.js 18 or later:
