@@ -581,7 +581,7 @@ No fix by the deadline? Replace the action, or use break-glass.
 
 **Who:** platform automation, with teams merging the pull requests · **When:** a SHA has an expiry date
 
-1. **Warn early.** Contoso raises a code scanning alert in each affected repository through the API, so the warning shows up where developers already look.
+1. **Warn early.** Contoso raises a GHAS Code Scanning alert in each affected repository through the API, so the warning shows up where developers already look (the Code Scanning tab in each repository).
 2. **Open the pull requests:** 7 days after a feature release, so a bad release has time to surface, or right away for a security fix.
 3. **On the date,** remove the SHA from the allowlist and mark it expired in the catalog. Workflows still on it fail, with a link to the replacement.
 4. **30 days later,** archive the Review GHE copy.
