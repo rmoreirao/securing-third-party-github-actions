@@ -276,7 +276,7 @@ Detections worth starting with: Actions policy changes outside automation; a thi
 
 # Where to start
 
-1. **Take an inventory.** SBOMs for every repository, plus code search for `uses:`. Note the ref, the SHA it resolves to, and whether the job holds secrets.
+1. **Take an inventory.** What workflows declare, with tags resolved to SHAs and nested actions included, plus what ran, from job logs. Note the SHA and whether the job holds secrets.
 2. **Sort it.** Trusted publisher: allow the repository. Untrusted and in use: review the SHA in use. Unused or duplicated: drop it.
 3. **Seed the catalog and the allowlist.** One SHA per untrusted action, and a sponsor for each.
 4. **Pin.** Automation opens pull requests that rewrite every `uses:` line to a full SHA.
@@ -285,7 +285,7 @@ Detections worth starting with: Actions policy changes outside automation; a thi
 <div class="takeaway">Approval is the start, not the finish.</div>
 
 <!--
-Tools: github-sbom-toolkit for the enterprise-wide inventory, pinact for pinning, zizmor and OpenSSF Scorecard for review.
+Tools: poutine or a script for the declared inventory (lockfiles on GitHub Enterprise Cloud), job logs for what ran, pinact for pinning, zizmor and OpenSSF Scorecard for review. A dependency graph SBOM only sees direct uses: on the default branch, never what ran.
 Break-glass works from day one, so enforcement never leaves a team stuck.
 -->
 

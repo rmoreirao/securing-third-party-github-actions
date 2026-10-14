@@ -156,8 +156,10 @@ When a job needs both third-party code and sensitive data, move it to an egress-
 In an incident, the first question is always "where do we use this?" Without an inventory, the answer takes days.
 
 - **A catalog**, with one entry per action: approved SHAs, the access each one gets, a sponsor team and dates. See the [catalog entry example](#catalog-entry-example).
-- **What workflows declare**, from the dependency graph SBOM across every repository, refreshed daily. [github-sbom-toolkit](https://github.com/advanced-security/github-sbom-toolkit) does this for a whole enterprise.
-- **What actually ran**, at which SHA and with which secrets, from the workflow runs API and the audit log.
+- **What workflows declare**, refreshed daily: every `uses:` in workflows and composite actions, the SHA each one resolves to, and the nested actions those actions call. Scan your repositories with a custom script or using 3rd party tools like [poutine](https://github.com/boostsecurityio/poutine).
+- **What actually ran**, at which SHA and with which secrets. The job logs list every action the runner downloaded, nested ones included, with its SHA. The `workflows.prepared_workflow_job` audit log event lists the secrets.
+
+The dependency graph SBOM can't do either job alone. It only reads `.github/workflows/` on the default branch, leaves tags unresolved and skips nested actions. It never shows what ran.
 
 Keep the catalog as YAML in a protected repository, in repository custom properties, or in a developer portal.
 
@@ -364,7 +366,7 @@ The numbers in the diagram are the steps in the chapter headings. Two review lan
 
 **Who:** the platform team, with dev teams merging the pull requests · **When:** once, one organization at a time
 
-1. **Take an inventory.** Pull the SBOM for every repository with github-sbom-toolkit, and fill the gaps with code search for `uses:`. Note the action, the ref, the SHA it resolves to, where it's used, and whether the job holds secrets.
+1. **Take an inventory, from two sources.** What workflows declare: scan every repository's workflows and composite actions, resolve each tag to its SHA, and follow the nested actions. What actually ran: parse the job logs from the last 90 days, where the runner records each action it downloads with its SHA. Note the action, the ref, the SHA, the workflow and job that use it, and whether the job holds secrets.
 2. **Sort it.**
    - Trusted publisher: allow the repository.
    - Untrusted and in use: run the full review on the SHA in use. If it passes, catalog it with a sponsor. If not, replace it within 30 days. Start with jobs that hold secrets.
@@ -502,12 +504,14 @@ Keep two kinds of evidence apart: what workflow files **say** today, and what ac
 
 | Question | Where the answer comes from |
 |---|---|
-| Which actions and SHAs are used, and where? | The dependency graph SBOM, via github-sbom-toolkit, refreshed daily |
-| What actually ran, and when? | The workflow runs API. Job logs record each action and its SHA |
-| Which secrets did each job get? | The `workflows.prepared_workflow_job` audit log event |
-| Is anything running that isn't in the catalog? | The inventory compared with the catalog |
+| Which actions and SHAs do workflows declare, and where? | The daily inventory: lockfiles or the repository scan, nested actions included |
+| What actually ran, and when? | The job logs, collected on each `workflow_job` webhook. The runner logs every action it downloads, nested ones included, with its SHA |
+| Which secrets did each job get? | The `workflows.prepared_workflow_job` audit log event. It doesn't list actions, so join it with the job logs by run |
+| Is anything running that isn't in the catalog? | What ran compared with the catalog |
 | Who's still on an expiring SHA? | The inventory compared with expiry dates |
 | Is the allowlist healthy? | The entry count, and entries nobody used in 90 days |
+
+GitHub's roadmap includes the Actions Data Stream, which sends run data, action versions included, to Amazon S3 or Azure Event Hubs. When it's available, it can replace collecting job logs.
 
 Detections worth starting with:
 
@@ -700,13 +704,17 @@ The list of repositories using each version isn't stored here. The inventory reb
 - [Enforcing policies for GitHub Actions in your enterprise](https://docs.github.com/en/enterprise-cloud@latest/admin/enforcing-policies/enforcing-policies-for-your-enterprise/enforcing-policies-for-github-actions-in-your-enterprise)
 - [Disabling or limiting GitHub Actions for your organization](https://docs.github.com/en/organizations/managing-organization-settings/disabling-or-limiting-github-actions-for-your-organization)
 - [Immutable releases](https://docs.github.com/en/code-security/concepts/supply-chain-security/immutable-releases)
+- [Workflow dependency lockfiles](https://docs.github.com/en/actions/concepts/security/workflow-dependency-lockfiles)
 
 **Tools**
 
 - [pinact](https://github.com/suzuki-shunsuke/pinact): pin actions to SHAs
 - [zizmor](https://github.com/zizmorcore/zizmor): static analysis for workflows and actions
 - [OpenSSF Scorecard](https://github.com/ossf/scorecard): repository security health
-- [github-sbom-toolkit](https://github.com/advanced-security/github-sbom-toolkit): an enterprise-wide SBOM and inventory
+- [poutine](https://github.com/boostsecurityio/poutine): scan every workflow in an organization
+- [gh-actions-lock](https://github.com/github/gh-actions-lock): GitHub's workflow dependency lockfiles
+- [actions-dependency-submission](https://github.com/jessehouwing/actions-dependency-submission): add nested and SHA-pinned actions to the dependency graph
+- [github-sbom-toolkit](https://github.com/advanced-security/github-sbom-toolkit): search dependency graph SBOMs across an enterprise. It only sees direct `uses:` on default branches
 - [gh-actions-lockfile](https://gh-actions-lockfile.net/): lockfiles for action dependencies
 - [GHESentinelAutomation](https://github.com/rmoreirao/GHESentinelAutomation): Microsoft Sentinel detections for GHE
 
