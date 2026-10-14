@@ -509,7 +509,6 @@ Keep two kinds of evidence apart: what workflow files **say** today, and what ac
 | Who's still on an expiring SHA? | The inventory compared with expiry dates |
 | Is the allowlist healthy? | The entry count, and entries nobody used in 90 days |
 
-GitHub's roadmap includes the Actions Data Stream, which sends run data, action versions included, to Amazon S3 or Azure Event Hubs. When it's available, it can replace collecting job logs.
 
 Detections worth starting with:
 
@@ -518,7 +517,36 @@ Detections worth starting with:
 - a CI token creates repositories, or clones far more than usual;
 - a self-hosted runner blocks outbound traffic while a third-party action runs.
 
-**Done when:** for any action, you can answer every question above in minutes.
+**Example: a token that clones too much.** In Contoso's December drill, the red team replays the prologue. It takes a copy of the build bot's token and starts cloning repositories from a laptop outside Contoso's network.
+
+**Detect.** The audit log stream includes Git events. Every clone arrives as a `git.clone` event with the actor, the IP address and a hash of the token (token data on Git events is in public preview). A Microsoft Sentinel rule runs every 5 minutes and flags any token that cloned 20 or more repositories in the last 15 minutes:
+
+```kql
+let threshold = 20;
+let bulkCloners = dynamic(["contoso-backup[bot]"]); // clones everything by design
+GitHubAuditLog_CL
+| where TimeGenerated > ago(15m)
+| where Action == "git.clone" and Actor !in (bulkCloners)
+| extend HashedToken = tostring(parse_json(RawEvent).hashed_token)
+| summarize Repos = dcount(Repository), Sample = make_set(Repository, 50),
+            IPs = make_set(ActorIP), FirstClone = min(TimeGenerated)
+    by Actor, AccessType, HashedToken
+| where Repos >= threshold
+```
+
+**Contain, automatically.** The rule raises a High incident. A Sentinel automation rule then runs a playbook, a Logic App that doesn't wait for anyone:
+
+- **Cut the token off.** For a GitHub App Contoso owns, like the build bot, suspend its installation (`PUT /app/installations/{installation_id}/suspended`), so none of its tokens work. For a person's fine-grained token, revoke the actor's tokens for the organization through the API.
+- **Gather the evidence.** Add the repositories, IP addresses and token type to the incident, plus the jobs that received the bot's credentials in the last 24 hours, from `workflows.prepared_workflow_job`. That's where the leak most likely happened.
+- **Call a person.** Post to the security channel and page the on-call, with the steps to undo the suspension.
+
+**Decide.** Sam (Security) takes it from there. A false alarm? Lift the suspension. A leak? Start the compromise response (Step 6, Chapter 9).
+
+Automate only what's cheap to undo. Suspending a bot for an hour costs some red builds. Letting it clone for an hour costs your source code. Blocking an action stays a human call: the SIEM sees the token, not the action that leaked it.
+
+**How it went.** The rule fired 6 minutes after the first clone, and the next clone failed a minute later. By then the red team's script had 64 repositories. Detection limits the damage but doesn't prevent it, so Marta (Platform) narrowed the bot's tokens to the repositories each job needs.
+
+**Done when:** for any action, you can answer every question above in minutes, and a token cloning far more than usual is cut off without waiting for a person.
 
 Keeping secrets away from third-party actions takes layers. Design them out with split jobs, environment secrets and OIDC. Catch mistakes in the pull request with the policy check. Catch the rest in the audit log, like Sam (Security) just did.
 
