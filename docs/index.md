@@ -257,7 +257,7 @@ Once an action is approved, where do workflows pull it from? You can choose per 
 
 ## Part 2 — How Contoso Secured Its Third-Party Actions
 
-> **This is a fictional story based on real facts from different organizations.** Contoso, Fabrikam, the people and the numbers are made up. The incidents and the practices aren't: they come from public incidents such as the `tj-actions/changed-files` compromise, and from what real platform teams do.
+> **This is a fictional story based on real facts from different organizations.** Contoso, Fabrikam, the people and the numbers are made up. The incidents and the practices aren't: they come from public incidents such as the `tj-actions/changed-files` compromise, the GhostAction campaign and the Shai-Hulud worm, and from what real platform teams do.
 
 Each chapter is a short scene, followed by the steps: who does it, when, what, and how you know it's done.
 
@@ -284,15 +284,29 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 - Every workflow using a tag ran the payload on its next run. More than 23,000 repositories used the action.
 - The payload read the runner's memory and printed secrets, double base64-encoded, into the workflow logs. In public repositories, anyone could read them.
 
-**What it cost Contoso** (fictional): an organization-wide bot token leaked through a public log, and with it the attacker cloned the source code of two products. Finding every workflow that used the action took four days. Nobody knew which job held which secret, so more than 250 credentials were rotated, just in case. Blocking the action took a day, because nobody owned the Actions policy.
+**What it cost Contoso** (fictional): the action leaked secrets for about a day. The attacker used them for three weeks.
 
-**Why it took so long** (fictional): three teams each held part of the answer, and none of them knew it. Security had flagged unpinned actions in a quarterly report that nobody outside security read. The platform team had SHA pinning on its backlog, waiting for a business case. Dev teams had stopped asking and built their own fixes. On the day, Sam (Security) spent the first three hours finding out who could change the Actions policy.
+- **All of its source code.** The release job of one public repository held the build bot's token: a classic personal access token with the `repo` and `workflow` scopes, on every repository in the organization. Within hours, the attacker had cloned all 2,100 private repositories: every product, every internal tool, every Terraform module.
+- **Every secret in that code.** Ten years of Git history held secrets nobody had cleaned up: database connection strings, storage account keys, a payment provider's API key. Secret scanning had flagged most of them years before. The alerts were still open.
+- **The secrets of other repositories.** With the `workflow` scope, the attacker pushed a one-file workflow to a new branch in 40 repositories. It ran on push, sent the repository's secrets to the attacker, and deleted the branch. Only secrets behind an environment with required reviewers stayed out of reach.
+- **Azure and Entra ID.** One of those secrets was `AZURE_CREDENTIALS`, the client secret of the production deployment service principal. It was Owner on the production subscriptions, and it had `Application.ReadWrite.All` in Entra ID so the pipeline could create app registrations. The attacker copied database backups with customer data out of a storage account, then added new client secrets to three other app registrations. Rotating the original secret didn't lock them out.
+- **Commits in Contoso's name.** The bot could bypass branch protection, so releases didn't wait for a review. The attacker used it to push one commit to a shared internal npm package: a `postinstall` script that sent environment variables to the attacker. The normal pipeline published it, and 70 services built with it over 9 days. Every build from those days was rebuilt and redeployed.
+- **The bill.** Customer data meant notifying the data protection authority within 72 hours, and writing to 40 enterprise customers. Releases froze for three weeks. Nobody knew which job held which secret, so more than 250 credentials were rotated, just in case. An outside incident response firm stayed for six weeks.
+
+**Why it took so long** (fictional): four teams each held part of the answer, and none of them knew it. Every hour they spent finding each other was an hour the attacker kept.
+
+- **Seeing it.** The audit log wasn't streamed anywhere, and nothing watched it. Sam (Security) noticed the clones a day late, almost by chance. When he asked which repositories the bot had cloned, its Git events were about to expire: the audit log keeps them for only seven days.
+- **Stopping it.** Security had flagged unpinned actions in a quarterly report that nobody outside security read. The platform team had SHA pinning on its backlog, waiting for a business case. Nobody owned the Actions policy, so Sam spent the first three hours finding out who could change it, and blocking the action took a day.
+- **Scoping it.** Dev teams had stopped asking and built their own fixes. With no inventory, finding every workflow that used the action took four days. With no map of which job held which secret, every team rotated everything it could find, and missed the secrets the attacker had taken from other repositories.
+- **Cutting off the cloud.** The Infra team owned the service principals, but nobody told them until day 3, because the incident was "a GitHub problem". The new app registration secrets turned up in week 3, in a manual review of the Entra ID audit logs.
+- **Trusting the code again.** The bot's commits had no review and looked like every other release. Finding the bad one meant reading every bot commit since the leak, across 2,100 repositories. That's how the npm package stayed live for 9 days.
 
 | What went wrong | What was missing |
 |---|---|
 | A moved tag delivered malicious code | An allowlist and SHA pinning |
 | Nobody had ever looked at the action | A review before approval |
 | The job held secrets it didn't need | Least privilege, and no secrets near third-party code |
+| One token could write to every repository, one secret could reach Azure | Short-lived, scoped tokens and OIDC |
 | Nothing limited where the payload could send data | Egress-controlled runners |
 | Four days to find every usage | An inventory with owners |
 | The first alert came a day late | Continuous monitoring |
@@ -321,6 +335,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 - Only allowlisted actions run, pinned to a full SHA. Existing workflows get migrated with pinact.
 - GitHub, Microsoft and Azure are trusted publishers, allowed per repository. Everyone else gets in one reviewed SHA at a time.
 - Tokens are read-only by default, and actions can't create or approve pull requests.
+- Bots use GitHub Apps with short-lived tokens instead of personal access tokens. Azure deployments use OIDC instead of client secrets.
 - Runners are ephemeral. Self-hosted runners get egress rules. Sensitive data goes to GitHub-hosted runners only when there's no other way.
 - The audit log streams to Microsoft Sentinel, with automated detections ([GHESentinelAutomation](https://github.com/rmoreirao/GHESentinelAutomation)).
 - Workflows use the vetted upstream. The Review GHE keeps a copy of every approved SHA.
@@ -628,7 +643,7 @@ No fix by the deadline? Replace the action, or use break-glass.
 | Time to block | A day | 29 minutes |
 | Finding affected runs | Four days | One query |
 | Credentials rotated | 250+ | 1 |
-| What leaked | The source code of two products | Some Helm charts |
+| What leaked | All private source code, Azure access and customer data | Some Helm charts |
 
 The review didn't catch this one. A dormant payload looks harmless until it wakes up. What saved Contoso were the controls that don't depend on the review: no secrets in the job, egress rules, and someone watching.
 
@@ -745,6 +760,8 @@ The list of repositories using each version isn't stored here. The inventory reb
 
 - [`tj-actions/changed-files` advisory (CVE-2025-30066)](https://github.com/tj-actions/changed-files/security/advisories/GHSA-mw4p-6x4p-x5m5)
 - [Trivy action ecosystem advisory](https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23)
+- [The GhostAction campaign: 3,325 secrets stolen through malicious workflows](https://blog.gitguardian.com/ghostaction-campaign-3-325-secrets-stolen/)
+- [Shai-Hulud: a worm that pushed workflows and made private repositories public](https://www.wiz.io/blog/shai-hulud-npm-supply-chain-attack)
 
 **GitHub docs**
 

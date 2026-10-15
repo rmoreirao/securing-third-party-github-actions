@@ -100,6 +100,7 @@ The Trivy case is why "review the code that actually runs" includes nested actio
 | A moved tag delivered malicious code | An allowlist and SHA pinning |
 | Nobody had ever looked at the action | A review before approval |
 | The job held secrets it didn't need | Least privilege, and no secrets near third-party code |
+| One token could write to every repository, one secret could reach Azure | Short-lived, scoped tokens and OIDC |
 | Nothing limited where the payload could send data | Egress-controlled runners |
 | Days to find every usage | An inventory with owners |
 | The first alert came a day late | Continuous monitoring |
@@ -108,7 +109,8 @@ The Trivy case is why "review the code that actually runs" includes nested actio
 
 <!--
 This is the post-mortem of the fictional Contoso in the guide, built from the real incident. Each row maps to one of the ten principles on the next two slides.
-Why it took so long: three teams each held part of the answer, and none of them knew it. Security had flagged unpinned actions in a report nobody else read. The platform team had SHA pinning on its backlog. Dev teams had built their own fixes. On the day, the first three hours went on finding out who could change the Actions policy.
+What it cost: the leaked build bot token could read and write every repository. The attacker cloned all 2,100 private repositories, harvested old secrets from Git history, pushed workflows to 40 repositories to steal their secrets, and found the Azure deploy service principal's client secret. With it: customer data copied out of storage, and new secrets on other Entra ID app registrations for persistence. A commit to a shared npm package shipped in 70 services for 9 days. Breach notification, a three-week release freeze, 250+ credentials rotated.
+Why it took so long: four teams each held part of the answer, and none of them knew it. No audit log streaming, so the clones were spotted a day late. Nobody owned the Actions policy: three hours to find out who could change it, a day to block. No inventory: four days to find every usage. The Infra team heard on day 3; the persistence in Entra ID turned up in week 3.
 -->
 
 ---
