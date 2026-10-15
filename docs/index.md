@@ -287,6 +287,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 **What it cost Contoso** (fictional): an organization-wide bot token leaked through a public log, and with it the attacker cloned the source code of two products. Finding every workflow that used the action took four days. Nobody knew which job held which secret, so more than 250 credentials were rotated, just in case. Blocking the action took a day, because nobody owned the Actions policy.
 
 **Why it took so long** (fictional): three teams each held part of the answer, and none of them knew it. Security had flagged unpinned actions in a quarterly report that nobody outside security read. The platform team had SHA pinning on its backlog, waiting for a business case. Dev teams had stopped asking and built their own fixes. On the day, Sam (Security) spent the first three hours finding out who could change the Actions policy.
+
 | What went wrong | What was missing |
 |---|---|
 | A moved tag delivered malicious code | An allowlist and SHA pinning |
@@ -307,6 +308,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 - 1,000+ developers in 100+ teams, all on GitHub Enterprise (GHE).
 - A platform team that runs GHE as a self-service product. Developers are its customers, and it balances security with speed of delivery.
 - Not a fully regulated industry, but security and governance are priorities, and code has leaked through CI/CD before.
+- Use Azure Cloud for infrastructure and services.
 
 **Already in place**
 
