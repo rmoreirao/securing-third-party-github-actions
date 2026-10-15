@@ -52,7 +52,7 @@ Onboard, adopt and monitor them without slowing teams down
 <span style="font-size:18px;color:#656d76">Personal views, not official Microsoft guidance</span>
 
 <!--
-Goal of the next 30 minutes: why third-party actions are a supply-chain risk, the ten principles that address it, and the settings checklist you can use for a gap assessment.
+Goal of the next 30 minutes: why third-party actions are a supply-chain risk, the ten principles that address it, the four teams that share the work, and the settings checklist you can use for a gap assessment.
 The full guide, with a step-by-step story of a fictional company (Contoso), is linked at the end.
 -->
 
@@ -108,6 +108,7 @@ The Trivy case is why "review the code that actually runs" includes nested actio
 
 <!--
 This is the post-mortem of the fictional Contoso in the guide, built from the real incident. Each row maps to one of the ten principles on the next two slides.
+Why it took so long: three teams each held part of the answer, and none of them knew it. Security had flagged unpinned actions in a report nobody else read. The platform team had SHA pinning on its backlog. Dev teams had built their own fixes. On the day, the first three hours went on finding out who could change the Actions policy.
 -->
 
 ---
@@ -130,15 +131,16 @@ This is the post-mortem of the fictional Contoso in the guide, built from the re
 
 # The principles (2/2)
 
-6. **Lock down the runner.** Ephemeral runners, default-deny egress, and nothing sensitive where you can't control the network.
+6. **Lock down the runner, with the team that runs it.** Ephemeral, default-deny egress, and every new destination approved like a secret.
 7. **Know what you run, and who owns it.** A catalog, an inventory and a sponsor team for every action.
 8. **Keep watching**, trusted publishers included. Dependabot doesn't alert on SHA-pinned actions, so build your own daily check.
 9. **Let every approval expire.** Old SHA: 3 months after a newer version, 30 days for High, the same day for Critical.
 10. **Be ready for the day an action goes bad.** Block with `!owner/repo@*` in minutes, rotate everything, rehearse.
 
-<div class="takeaway">The platform team runs the process and the tooling. The team that asked for an action sponsors it.</div>
+<div class="takeaway">Platform runs the process. The requesting team sponsors it. Security watches what runs. Infra owns the runners and egress. None of them can do it alone.</div>
 
 <!--
+6: the Infra team runs the runners and owns their egress rules. A new destination is declared in the request, approved, and recorded in the catalog's network: field.
 8: pinning switches off Dependabot alerts for actions, so you need a replacement safety net: Advisory Database matching, audit log to SIEM.
 10: blocking takes one allowlist entry. Knowing which runs and secrets were exposed takes data you must already be collecting.
 -->
@@ -168,6 +170,27 @@ Trusted publishers in the Contoso story: GitHub, Microsoft and Azure, allowed pe
 
 ---
 
+<!-- _class: dense -->
+
+# When an action needs a new destination
+
+A deployment to a third-party vendor, for example. The Infra team that runs the runners is part of the decision.
+
+- **Treat a network destination like a secret.** Declare it in the request, approve it, and record it in the catalog's `network:` field.
+- **Scope rules to a runner group, not the shared pool.** For example, a `deploy-northwind` group that only the repositories deploying to that vendor can use.
+- **Allow exact hostnames.** No wildcards on shared hosting like `*.amazonaws.com` or `*.blob.core.windows.net`: attackers can host there too.
+- **Find out what the action actually calls.** During onboarding, run it on a test runner that logs traffic without blocking it, and compare that with what the request declared.
+- **Split the job.** The third-party action runs with no secrets and no extra network. A separate deploy job uses the vendor's CLI, with OIDC where the vendor supports it, and can reach only the vendor.
+
+<div class="takeaway">The catalog is the source of truth. The Infra team, or automation, turns it into egress rules.</div>
+
+<!--
+Ideally the egress rules change through a pull request to an egress-as-code repository, generated from the catalog.
+Target in the story: the egress rule for a new destination lands within the onboarding window.
+-->
+
+---
+
 ![bg right:38% contain](../assets/third-party-actions-lifecycle.svg)
 
 # One lifecycle, clear owners
@@ -188,8 +211,90 @@ Trusted publishers in the Contoso story: GitHub, Microsoft and Azure, allowed pe
 <div class="takeaway">Every new SHA goes back through review, whether it's a new action, an update or a security fix.</div>
 
 <!--
-Onboarding targets in the story: 1–2 business days for trusted publishers, 3–5 for everyone else.
+Onboarding targets in the story: 1–2 business days for trusted publishers, 3–5 for everyone else. An egress rule for a new destination lands within the same window.
 Break-glass: 72 hours by default, 7 days at most, approved by platform and security. Never for a compromised SHA or unreviewed code.
+-->
+
+---
+
+<!-- _class: dense -->
+
+<style scoped>
+table { font-size: 16px; }
+th, td { padding: 4px 10px; }
+td:first-child { white-space: nowrap; }
+</style>
+
+# Four teams, one process
+
+| Step | Platform team | Dev teams | Security team | Infra team |
+|---|---|---|---|---|
+| 0 · Bootstrap | Inventory, catalog, enforcement | Merge the pinning pull requests | – | Ephemeral runners, baseline egress allowlist |
+| 1 · Request | Triage | Ask, and explain why | Risky requests | – |
+| 2 · Onboarding | Run the checks, decide, publish | Review and test | Risky requests | New destinations, egress rules |
+| 3 · Adoption | Catalog and policy check | Use as approved | – | – |
+| 4 · Monitoring | Inventory, run evidence, dashboards | Fix flagged workflows | SIEM detections | Blocked-egress logs to the SIEM |
+| 5 · Lifecycle | Updates, daily checks, expiry dates | Request updates, merge pull requests | Critical findings | – |
+| 6 · Compromise | Confirm, contain, scope, track | Rotate their secrets | Investigate | Block the destination, isolate the runner group |
+| 7 · Break-glass | Approve and expire | Ask | Co-approve | – |
+
+<div class="takeaway">If a step has no owner, it won't happen. If the owners don't talk, it won't work.</div>
+
+<!--
+In the story, the platform, security, Infra and dev teams sit in one room for the first time, and share one channel for third-party actions from then on.
+Payoff in Chapter 9: two minutes after the alert, Security opened the incident in the shared channel, where Platform and the sponsor already were. The action was blocked in 29 minutes. In 2025, the first hour went on finding out who owned the policy.
+-->
+
+---
+
+<!-- _class: dense -->
+
+# Detect and contain a leaked token
+
+<div class="cols">
+<div>
+
+### Detect
+
+- Every `git.clone` in the audit log stream carries the actor, the IP address and a hash of the token.
+- A Microsoft Sentinel rule runs every 5 minutes and flags any token that cloned **20 or more repositories in 15 minutes**.
+
+<div style="font-size:16px">
+
+```kql
+let threshold = 20;
+GitHubAuditLog_CL
+| where TimeGenerated > ago(15m)
+| where Action == "git.clone"
+| extend HashedToken =
+    tostring(parse_json(RawEvent).hashed_token)
+| summarize Repos = dcount(Repository)
+    by Actor, AccessType, HashedToken
+| where Repos >= threshold
+```
+
+</div>
+</div>
+<div>
+
+### Contain, automatically
+
+- **Cut the token off:** suspend the GitHub App installation, so none of its tokens work.
+- **Gather the evidence:** repositories, IP addresses, and the jobs that received the bot's credentials.
+- **Call a person**, who lifts the suspension or starts the compromise response.
+
+In Contoso's drill, the rule fired **6 minutes** after the first clone. By then, 64 repositories were gone.
+
+</div>
+</div>
+
+<div class="takeaway">Automate only what's cheap to undo. Detection limits the damage; it doesn't prevent it.</div>
+
+<!--
+Red team drill in the story: a copy of the build bot's token, cloning from a laptop outside the network. Same pattern as the 2025 incident.
+Exclude bots that clone everything by design, like a backup app. Token data on Git events is in public preview.
+Suspending a bot for an hour costs some red builds; letting it clone for an hour costs your source code. Blocking an action stays a human call: the SIEM sees the token, not the action that leaked it.
+After the drill, Contoso narrowed the bot's tokens to the repositories each job needs.
 -->
 
 ---
@@ -251,6 +356,8 @@ SHA pinning applies to every remote action, internal ones too, so migrate first 
 <li>Default-deny egress on self-hosted runners</li>
 <li>Self-hosted runner groups limited to selected organizations and repositories</li>
 <li>No sensitive secrets in third-party jobs on standard GitHub-hosted runners</li>
+<li>Every network destination in the catalog has an egress rule, scoped to a runner group</li>
+<li>Blocked-egress alerts go to the platform, security and Infra teams</li>
 </ul>
 
 </div>
@@ -269,7 +376,7 @@ SHA pinning applies to every remote action, internal ones too, so migrate first 
 
 <!--
 Standard GitHub-hosted runners have no egress control. When a job needs both third-party code and sensitive data: egress-controlled self-hosted runners, GitHub-hosted runners with private networking, or accept the risk in writing.
-Detections worth starting with: Actions policy changes outside automation; a third-party job receiving a secret its catalog entry doesn't allow; a CI token cloning far more than usual.
+Detections worth starting with: Actions policy changes outside automation; a third-party job receiving a secret its catalog entry doesn't allow; a CI token cloning far more than usual, contained automatically; a self-hosted runner blocking outbound traffic while a third-party action runs.
 -->
 
 ---
@@ -299,7 +406,7 @@ Break-glass works from day one, so enforcement never leaves a team stuck.
 
 **The full guide:** rmoreirao.github.io/securing-third-party-github-actions
 
-The principles and settings, plus the Contoso story: request forms, catalog schema, expiry rules and the incident runbook.
+The principles and settings, plus the Contoso story: who does what, request forms, an onboarding checklist with criticality levels, catalog schema, expiry rules and the incident runbook.
 
 <span style="font-size:18px;color:#656d76">Contoso and Fabrikam are fictional. Licensed under CC BY 4.0.</span>
 
