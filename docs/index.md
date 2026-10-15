@@ -37,13 +37,13 @@ Every `uses:` line in a workflow runs someone else's code next to your source co
 - **Pin everything to a full commit SHA.** Tags move. Commits don't.
 - **Review the code that actually runs**, not the README.
 - **Keep tokens and secrets on a short leash.** Read-only by default, and no secrets near third-party code.
-- **Lock down the runner.** Ephemeral, egress-controlled, and nothing sensitive where you can't control the network.
+- **Lock down the runner, with the team that runs it.** Ephemeral, default-deny egress, and every new destination approved like a secret.
 - **Know what you run, and who owns it.** A catalog, an inventory and a sponsor team for every action.
 - **Keep watching**, trusted publishers included.
 - **Let every approval expire.** Old SHAs leave. Exceptions too.
 - **Be ready for the day an action goes bad.** Block in minutes, rotate everything, rehearse.
 
-**Who owns what:** the platform team runs the process and the tooling. The dev team that asked for an action sponsors it, and shares the job of keeping it safe and up to date. The security team watches what runs, and joins on risky requests and incidents. None of them can do it alone.
+**Who owns what:** the platform team runs the process and the tooling. The dev team that asked for an action sponsors it, and shares the job of keeping it safe and up to date. The security team watches what runs, and joins on risky requests and incidents. The Infra team runs the runners and owns their egress rules. None of them can do it alone.
 ### What this covers (and what it doesn't)
 
 This guide is about **third-party actions**: any `uses: owner/repo@ref` that lives outside your enterprise. That includes GitHub's own `actions/*`, Microsoft and Azure actions, everything on the Marketplace, and whatever those actions pull in when they run: nested actions, container images and downloaded tools.
@@ -150,6 +150,14 @@ A compromised action sends data anywhere the runner can reach. A runner that get
 
 When a job needs both third-party code and sensitive data, move it to an egress-controlled self-hosted runner, use GitHub-hosted runners with private networking, or accept the risk in writing.
 
+**When an action needs a new destination**, like a deployment to a third-party vendor, the Infra team that runs the runners is part of the decision:
+
+- **Treat a network destination like a secret.** Declare it in the request, approve it, and record it in the catalog's `network:` field. The catalog is the source of truth: the Infra team, or automation, turns it into egress rules, ideally through a pull request to an egress-as-code repository.
+- **Scope rules to a runner group, not the shared pool.** For example, a `deploy-northwind` group that only the repositories deploying to that vendor can use.
+- **Allow exact hostnames.** No wildcards on shared hosting like `*.amazonaws.com` or `*.blob.core.windows.net`: attackers can host there too.
+- **Find out what the action actually calls.** During onboarding, run it on a test runner that logs traffic without blocking it, and compare that with what the request declared.
+- **Split the job.** The third-party action runs with no secrets and no extra network. A separate deploy job uses the vendor's CLI, with OIDC where the vendor supports it, and can reach only the vendor.
+
 #### Know what you run, and who owns it
 
 In an incident, the first question is always "where do we use this?" Without an inventory, the answer takes days.
@@ -236,6 +244,8 @@ Once an action is approved, where do workflows pull it from? You can choose per 
 - [ ] Default-deny egress on self-hosted runners
 - [ ] Self-hosted runner groups limited to selected organizations and repositories
 - [ ] No sensitive secrets in third-party jobs on standard GitHub-hosted runners
+- [ ] Every network destination in the catalog has an egress rule, scoped to a runner group
+- [ ] Blocked-egress alerts go to the platform, security and Infra teams
 
 **Monitoring**
 
@@ -317,7 +327,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Chapter 2: The cast and the map (Roles, Responsibilities and the End-to-End Process)
 
-> For the first time, the three teams are in one room. Sam (Security) brings detections nobody else had seen. Ana (Payments), speaking for the dev teams, brings a list of what teams actually need. Marta (Platform) writes the cast on the whiteboard before drawing a single box. "If a step has no owner, it won't happen." Sam adds: "And if the owners don't talk, it won't work."
+> For the first time, the platform, security, Infra and dev teams are in one room. Sam (Security) brings detections nobody else had seen. Ana (Payments), speaking for the dev teams, brings a list of what teams actually need. Marta (Platform) writes the cast on the whiteboard before drawing a single box. "If a step has no owner, it won't happen." Sam adds: "And if the owners don't talk, it won't work."
 
 **The cast**
 
@@ -327,19 +337,20 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 | **Sponsor team** | Ana, tech lead in Payments | The use case: why it's needed, reviewing it with the platform team, testing, migrating on time |
 | **Consuming teams** | Everyone else using the action | Using it as approved, migrating before expiry, rotating their secrets |
 | **Security team** | Sam | SIEM detections, incident investigation, co-approving break-glass |
+| **Infra team** | The team that runs Contoso's self-hosted runners | The runners: images, runner groups, egress rules and network logs |
 
 **Who does what**
 
-| Step | Platform team | Dev teams | Security team |
-|---|---|---|---|
-| 0 · Bootstrap | Inventory, catalog, enforcement | Merge the pinning pull requests | – |
-| 1 · Request | Triage | Ask, and explain why | Consulted on risky requests |
-| 2 · Onboarding | Run the checks, decide, publish | Review and test | Consulted on risky requests |
-| 3 · Adoption | Catalog and policy check | Use as approved | – |
-| 4 · Monitoring usage | Inventory, run evidence, dashboards | Fix flagged workflows | SIEM detections |
-| 5 · Lifecycle management | Review updates, run daily security checks, set expiry dates, open pull requests | Request updates, merge pull requests | Consulted on Critical findings |
-| 6 · Compromise response | Confirm, contain, scope, track | Rotate their secrets | Investigate |
-| 7 · Break-glass | Approve and expire | Ask | Co-approve |
+| Step | Platform team | Dev teams | Security team | Infra team |
+|---|---|---|---|---|
+| 0 · Bootstrap | Inventory, catalog, enforcement | Merge the pinning pull requests | – | Ephemeral runners, and a baseline egress allowlist from the traffic runners already make |
+| 1 · Request | Triage | Ask, and explain why | Consulted on risky requests | – |
+| 2 · Onboarding | Run the checks, decide, publish | Review and test | Consulted on risky requests | Consulted on new destinations, apply the egress rules on publish |
+| 3 · Adoption | Catalog and policy check | Use as approved | – | – |
+| 4 · Monitoring usage | Inventory, run evidence, dashboards | Fix flagged workflows | SIEM detections | Blocked-egress logs to the SIEM |
+| 5 · Lifecycle management | Review updates, run daily security checks, set expiry dates, open pull requests | Request updates, merge pull requests | Consulted on Critical findings | – |
+| 6 · Compromise response | Confirm, contain, scope, track | Rotate their secrets | Investigate | Block the destination, isolate the runner group |
+| 7 · Break-glass | Approve and expire | Ask | Co-approve | – |
 
 **The numbers**
 
@@ -347,6 +358,7 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 |---|---|
 | Onboarding, trusted publisher | 1–2 business days |
 | Onboarding, untrusted publisher | 3–5 business days |
+| Egress rule for a new destination | Within the onboarding window |
 | Minimum age, repository / SHA | 2 months / 7 days |
 | Old SHA after a newer version | Expires in 3 months |
 | High / Critical finding | Expires in 30 days / the same day |
