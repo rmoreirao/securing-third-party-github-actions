@@ -769,6 +769,15 @@ Approving an action doesn't make the workflow around it safe. This guide doesn't
 - [ ] **Bind manual approval to the reviewed commit.** For comment- or label-triggered automation, verify the actor and run the exact approved SHA. Approval of one commit doesn't approve later changes.
 - [ ] **Constrain AI agents in CI.** Treat repository content, issues, PRs and tool results as possible prompt injection. Limit the agent's tools, credentials, write permissions and spending.
 
+### Limit what automation identities can do
+
+Short-lived credentials limit exposure time, not access. OIDC doesn't make an overprivileged identity safe.
+
+- [ ] **Scope GitHub access to the task.** Workflow `permissions:` controls only `GITHUB_TOKEN`, not a PAT or GitHub App token supplied separately. Limit those credentials to the required repositories and API permissions. Avoid broad classic PAT scopes, organization administration and branch-protection bypasses.
+- [ ] **Scope Azure RBAC to the target resources.** Assign the deployment identity only the roles it needs, at the narrowest practical scope. Avoid subscription-wide Owner or Contributor for routine deployments. Separate role-assignment administration from application deployment.
+- [ ] **Review Entra permissions separately.** Azure RBAC, Entra directory roles and Microsoft Graph API permissions are separate authorization surfaces. Grant only what's required, and avoid tenant-wide application or directory write permissions for routine deployments.
+- [ ] **Separate identities by purpose and environment.** Don't reuse production identities in PR validation or development jobs. Restrict OIDC trust to the intended repository and branch or protected environment, and review effective access regularly.
+
 ### Control contributions and releases
 
 - [ ] **Require approval for all external contributors' fork workflows.** First-time-only approval can be bypassed with an innocent first contribution. Don't send secrets or write tokens to fork PRs. These approvals don't protect `pull_request_target`.
