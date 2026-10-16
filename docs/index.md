@@ -55,6 +55,8 @@ It doesn't cover:
 - **How to build your runner platform.** This guide only says what runners need to do.
 - **Packages your own `run:` steps install.** That's regular dependency management.
 
+For a short checklist of these surrounding controls, see [Appendix: Beyond third-party actions](#appendix-beyond-third-party-actions).
+
 ### The principles
 
 #### Make the secure path the fastest path
@@ -754,7 +756,40 @@ versions:
 
 The list of repositories using each version isn't stored here. The inventory rebuilds it every day.
 
-### Further reading
+## Appendix: Beyond third-party actions
+
+Approving an action doesn't make the workflow around it safe. This guide doesn't cover the following controls, but you still need them. Use this short checklist alongside the onboarding and lifecycle process.
+
+### Protect the workflow itself
+
+- [ ] **Review pipeline changes like production code.** Require CODEOWNERS approval for workflows, local actions and build scripts. Protect branches with required checks, stale-approval dismissal and tightly controlled bypasses.
+- [ ] **Scan workflow code.** Run CodeQL's `actions` analysis and complementary checks such as zizmor on pull requests and on a schedule. Block serious findings before merge.
+- [ ] **Keep privileged triggers away from untrusted code.** Avoid `pull_request_target` and `workflow_run` unless necessary. Never execute untrusted PR code in their privileged context, including through build scripts, configuration files or downloaded artifacts.
+- [ ] **Pass untrusted input as data, not code.** Don't interpolate PR titles, branch names, comments or other attacker-controlled values into scripts. Use environment variables or safe argument interfaces, quote variables and validate inputs.
+- [ ] **Bind manual approval to the reviewed commit.** For comment- or label-triggered automation, verify the actor and run the exact approved SHA. Approval of one commit doesn't approve later changes.
+- [ ] **Constrain AI agents in CI.** Treat repository content, issues, PRs and tool results as possible prompt injection. Limit the agent's tools, credentials, write permissions and spending.
+
+### Control contributions and releases
+
+- [ ] **Require approval for all external contributors' fork workflows.** First-time-only approval can be bypassed with an innocent first contribution. Don't send secrets or write tokens to fork PRs. These approvals don't protect `pull_request_target`.
+- [ ] **Protect deployment and publishing paths.** Release only reviewed code. Restrict deployment branches and tags, require independent approval for sensitive environments and limit bypasses.
+- [ ] **Treat artifacts and caches as trust boundaries.** Check where artifacts came from and validate their contents before privileged use. Don't execute untrusted artifacts or restore caches that untrusted code can populate into release jobs.
+
+### Secure the rest of the build
+
+- [ ] **Secure dependencies installed by your own scripts.** Use lockfiles and reproducible installs, verify downloaded tools and disable dependency install scripts unless needed.
+- [ ] **Keep secrets out of logs and build outputs.** Mask generated or transformed credentials before use. Don't rely on automatic redaction, especially for structured secrets. Check logs and artifacts for accidental exposure.
+- [ ] **Prevent workflow-state injection.** Don't let untrusted content write arbitrary values to `GITHUB_ENV`, `GITHUB_PATH` or outputs that later steps interpret as commands.
+
+### Secure the runner platform
+
+- [ ] **Harden the machines beneath the runners.** Patch images, minimize administrator privileges, remove standing credentials and restrict cloud metadata access. Containers and ephemeral registration alone don't guarantee isolation.
+- [ ] **Keep untrusted workloads off privileged infrastructure.** Avoid self-hosted runners for public PRs. Separate workloads by trust level, including their underlying hosts and networks.
+- [ ] **Watch the host and the bill.** Monitor unexpected processes, file changes and resource consumption. Use timeouts, concurrency limits and billing alerts to limit abuse.
+
+---
+
+## Further reading
 
 **Incidents**
 
