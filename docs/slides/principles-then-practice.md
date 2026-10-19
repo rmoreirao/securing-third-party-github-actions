@@ -67,6 +67,11 @@ style: |
   .branches { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; }
   .branches > div { background: #fff8f0; border-left: 6px solid #bf5700; border-radius: 6px; padding: 10px 16px; font-size: 18px; }
   .branches b { color: #953800; }
+  .impl { margin-top: 16px; background: #effaf2; border-left: 6px solid #1a7f37; border-radius: 6px; padding: 10px 18px 12px; font-size: 19px; line-height: 1.35; }
+  .impl .impl-h { margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1a7f37; }
+  .impl ul { list-style: none; padding-left: 0; margin: 0; }
+  .impl li { padding-left: 1.3em; text-indent: -1.3em; margin: 3px 0; }
+  .impl li::before { content: "☐ "; color: #1a7f37; }
 ---
 
 <!-- _class: lead -->
@@ -200,8 +205,6 @@ No Contoso story in this part. These are the ten principles from the guide, grou
 
 # Make the secure path the fastest path
 
-Search the catalog → Request what's missing → Get a decision → Copy the snippet
-
 | Team | Its part of the secure path |
 |---|---|
 | **Platform** | Runs the process, catalog, checks and policy |
@@ -209,8 +212,11 @@ Search the catalog → Request what's missing → Get a decision → Copy the sn
 | **Security** | Watches what runs; joins risky requests and incidents |
 | **Infra team** | Runs the runners and owns their egress rules |
 
-- **Publish turnaround times:** 1–2 business days for trusted publishers, 3–5 for everyone else.
-- Automate checks that don't need a human. Link every policy failure to the catalog and the request form.
+<div class="impl"><p class="impl-h">Implementation details</p><ul>
+<li>A self-service tool to search the catalog and request third-party GitHub Actions</li>
+<li>Published turnaround times: 1–2 / 3–5 business days</li>
+<li>Every policy failure links to the catalog and the request form</li>
+</ul></div>
 
 <div class="takeaway">If the approved route is slower than a workaround, people take the workaround.</div>
 
@@ -218,14 +224,17 @@ Search the catalog → Request what's missing → Get a decision → Copy the sn
 Time: 1:45. Elapsed: 5:00.
 This principle underpins all three groups on the next slides.
 The requesting dev team is the sponsor: it shares responsibility for review, testing and keeping the action current. Other consuming teams must use it within its limits and migrate on time.
-This is a self-service product, not a security ticket queue. A portal, GitHub issue forms or an existing ITSM tool can provide the front door.
-The two turnaround times come from two onboarding routes. The next slide explains them.
+This is a self-service product, not a security ticket queue. GitHub issue forms, a developer portal like Backstage or an existing ITSM tool can provide the front door. Developers search the catalog, request what's missing, get a decision and copy the approved snippet.
+Point at the green box, don't read it. Automate every check that doesn't need a human. The full settings checklist is in backup.
+The two turnaround times come from two onboarding routes: 1–2 business days for trusted publishers, 3–5 for everyone else. The next slide explains them.
 -->
 
 ---
 
 <style scoped>
 .route code { white-space: nowrap; }
+.route { margin-top: 4px; padding: 12px 20px; }
+.route li { margin-bottom: 2px; }
 </style>
 
 <p class="section-label">Part 1 · Principles · Approve what runs</p>
@@ -237,7 +246,7 @@ The two turnaround times come from two onboarding routes. The next slide explain
 
 ### Trusted publishers
 
-- A **short list you choose**: organizations, never individuals.
+- A **short list you choose**, never individuals.
 - Allow the repository: `owner/repo@*`
 - **Fast track:** 1–2 business days.
 - **The price:** future SHAs run without review.
@@ -250,10 +259,15 @@ The two turnaround times come from two onboarding routes. The next slide explain
 - Any other publisher, verified badge or not.
 - Allow one SHA: `owner/repo@<full-sha>`
 - **Full review:** 3–5 business days.
-- **Every new version** goes back through review.
+- **Every new version** is reviewed again.
 
 </div>
 </div>
+
+<div class="impl"><p class="impl-h">Implementation details</p><ul>
+<li>A short, written list of trusted publishers, reviewed twice a year</li>
+<li>Allowlist trusted publishers per repository, never <code>owner/*</code></li>
+</ul></div>
 
 <div class="takeaway">Trust a few publishers for speed. Balance it with pinning, daily monitoring and a fast block.</div>
 
@@ -304,11 +318,18 @@ Check images and downloads too.
 </div>
 </div>
 
+<div class="impl"><p class="impl-h">Implementation details</p><ul>
+<li>Actions policy: allow enterprise and selected actions only; <b>Allow Marketplace actions by verified creators:</b> off</li>
+<li><b>Require actions to be pinned to a full-length commit SHA:</b> on</li>
+<li>Review every SHA in an isolated copy, scanned with GitHub Advanced Security and zizmor</li>
+</ul></div>
+
 <div class="takeaway">Pinning fixes the reference. Review evaluates the code. Neither replaces the other.</div>
 
 <!--
 Time: 1:30. Elapsed: 7:30.
 An exact-SHA allowlist entry authorizes one reviewed revision; the pinning setting requires workflows to name a full SHA. They are separate controls.
+The exact policy name is "Allow enterprise, and select non-enterprise, actions and reusable workflows", enforced at enterprise level. Generate the allowlist from the catalog and alert on manual edits.
 Trusted publishers were covered on the previous slide; don't repeat the trade-off here.
 Review the exact SHA in isolation, including action.yml, dist/, pre/post hooks, nested actions, images and runtime downloads. Use GHAS, the Advisory Database, Scorecard and zizmor. AI advice is not an approval.
 Default minimum ages: repository 2 months, SHA 7 days. Security fixes skip the wait, never the review.
@@ -316,6 +337,12 @@ Full allowlist syntax is in backup.
 -->
 
 ---
+
+<style scoped>
+.route { margin-top: 4px; padding: 12px 20px; }
+.route h3 { font-size: 22px; }
+.route li { margin-bottom: 2px; }
+</style>
 
 <p class="section-label">Part 1 · Principles · Limit what it can reach</p>
 
@@ -326,9 +353,8 @@ Full allowlist syntax is in backup.
 
 ### Keep tokens and secrets on a short leash
 
-- Read-only by default; grant permissions per job.
-- Keep secrets away from third-party code.
-- Split jobs; use scoped, short-lived tokens and OIDC.
+- An action can read every secret in its job.
+- Use scoped, short-lived tokens.
 - Don't persist checkout credentials.
 
 </div>
@@ -336,20 +362,25 @@ Full allowlist syntax is in backup.
 
 ### Lock down the runner, with the team that runs it
 
-- One job, then discard the runner.
-- Default-deny egress on self-hosted runners.
 - Approve network destinations like secrets.
-- Scope runner groups to selected repositories.
+- The Infra team owns the egress rules.
+- Log and alert on blocked calls.
 
 </div>
 </div>
+
+<div class="impl"><p class="impl-h">Implementation details</p><ul>
+<li><b>Workflow permissions:</b> read repository contents and packages; <code>permissions: {}</code>, then grant per job</li>
+<li>Third-party actions in their own job, with no secrets; OIDC instead of stored secrets</li>
+<li>Ephemeral runners, default-deny egress, runner groups scoped to selected repositories</li>
+</ul></div>
 
 <div class="takeaway">When code turns malicious, its access determines the blast radius.</div>
 
 <!--
 Time: 2:00. Elapsed: 9:30.
 An action can reach secrets and environment variables available to its job, not just the values intended for its own step.
-Start with permissions: {}, grant per job, set persist-credentials: false on checkout, and avoid secrets: inherit and toJSON(secrets).
+Start with permissions: {}, grant per job, set persist-credentials: false on checkout, and avoid secrets: inherit and toJSON(secrets). Turn off "Allow GitHub Actions to create and approve pull requests", and add a required policy check through an organization ruleset.
 Standard GitHub-hosted runners are ephemeral but have no egress control. Keep sensitive secrets and data out of third-party jobs there. For jobs needing sensitive data, use egress-controlled self-hosted runners, private networking, or written risk acceptance.
 The Infra team owns egress. The catalog declares exact destinations, approved rules are scoped to a runner group, and blocked calls go to the SIEM.
 -->
@@ -358,18 +389,27 @@ The Infra team owns egress. The catalog declares exact destinations, approved ru
 
 <!-- _class: dense -->
 
+<style scoped>
+td:first-child { white-space: nowrap; }
+th, td { padding: 6px 12px; }
+</style>
+
 <p class="section-label">Part 1 · Principles · Keep managing it</p>
 
 # Approval is the start, not the finish
 
 | Principle | What must keep happening |
 |---|---|
-| **Know what you run, and who owns it** | Catalog, daily inventory, runtime evidence and a sponsor |
-| **Keep watching** | Daily advisory checks; detections on what actually ran, trusted publishers included |
-| **Let every approval expire** | Migrate off old SHAs; remove them on the date; expire exceptions too |
-| **Be ready for the day an action goes bad** | Block, scope, rotate and recover with a rehearsed runbook |
+| **Know what you run, and who owns it** | Catalog, inventory, run evidence, a sponsor |
+| **Keep watching** | Daily advisory checks, trusted publishers included |
+| **Let every approval expire** | Old SHAs and exceptions leave on their date |
+| **Be ready for the day an action goes bad** | Block, scope, rotate and recover |
 
-<div class="route">Approved SHA → Watched while in use → Updated or blocked → Retired</div>
+<div class="impl"><p class="impl-h">Implementation details</p><ul>
+<li>Audit log streamed to your SIEM, kept for your incident look-back window</li>
+<li>A catalog with a sponsor and an expiry date for every SHA</li>
+<li>A rehearsed runbook: block with <code>!owner/repo@*</code> in minutes</li>
+</ul></div>
 
 <div class="takeaway">You need evidence and owners before the incident, not after it.</div>
 
@@ -377,9 +417,10 @@ The Infra team owns egress. The catalog declares exact destinations, approved ru
 Time: 2:30. Elapsed: 12:00.
 These are the remaining four principles. Part 1 is now complete.
 Distinguish the catalog (what is approved), the inventory (what workflows declare), and run evidence (what executed, with which access).
-Dependabot doesn't raise alerts for SHA-pinned actions. Replace that safety net with daily advisory matching and dependency scanning on reviewed copies.
+Dependabot doesn't raise alerts for SHA-pinned actions. Replace that safety net with daily checks: advisories for every live action, Dependabot on reviewed copies, and moved tags. Detections run on what actually ran.
 Defaults: an old SHA expires 3 months after a newer version is approved, 30 days after a High finding, the same day for Critical; compromise is blocked immediately. Warn and open migration PRs.
 Keep audit logs for the incident look-back window. Rehearse a tabletop twice a year and a technical drill quarterly.
+Point at the green box, don't read it. The full settings checklist is in backup.
 Transition: the framework is complete. From here, follow Contoso chronologically; don't repeat the principles as another checklist.
 -->
 
@@ -1050,6 +1091,7 @@ The guide and this talk express personal views, not official Microsoft guidance.
 
 <!--
 Reference only; outside the 27-minute main presentation.
+The green Implementation details boxes in Part 1 show the key items; this and the next slide are the full list, word for word with the guide.
 This and the next slide reproduce the guide's settings checklist item for item.
 SHA pinning applies to all remote actions, internal ones too. Migrate before enabling it.
 -->
