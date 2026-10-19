@@ -45,6 +45,28 @@ style: |
   ul.check { list-style: none; padding-left: 0; }
   ul.check li { padding-left: 1.3em; text-indent: -1.3em; margin-bottom: 6px; }
   ul.check li::before { content: "☐ "; color: #0b5cad; }
+  .steps { display: flex; gap: 6px; margin: 0 0 10px; font-size: 14px; font-weight: 600; }
+  .steps span { padding: 3px 10px; border-radius: 12px; background: #f0f2f4; color: #656d76; white-space: nowrap; }
+  .steps span.on { background: #0b5cad; color: #fff; }
+  .step { display: grid; grid-template-columns: 3fr 2fr; gap: 28px; font-size: 22px; }
+  .step ul { margin: 6px 0 0; padding-left: 1.1em; }
+  .step li { margin-bottom: 6px; }
+  .moment { background: #f6f8fa; border-radius: 6px; padding: 12px 16px; margin: 0 0 6px; }
+  .applied { background: #eef5fc; border-radius: 6px; padding: 14px 18px; align-self: start; }
+  .applied h3 { margin: 0 0 6px; font-size: 20px; }
+  .applied p { margin: 10px 0 0; font-size: 19px; line-height: 1.35; }
+  .applied b, .chips b, .principle { color: #0b5cad; }
+  .chips { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 14px; font-size: 19px; }
+  .chips span { background: #eef5fc; border-radius: 6px; padding: 6px 12px; }
+  .flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; margin-top: 6px; }
+  .flow > div { position: relative; background: #eef5fc; border-radius: 6px; padding: 12px; font-size: 17px; line-height: 1.3; }
+  .flow > div:not(:last-child)::after { content: "→"; position: absolute; right: -21px; top: 38%; color: #0b5cad; font-weight: 700; font-size: 20px; }
+  .flow b, .branches b { display: block; color: #0b5cad; font-size: 19px; margin-bottom: 4px; }
+  .who { display: block; margin-top: 8px; font-size: 14px; font-weight: 600; color: #656d76; }
+  .loop { text-align: right; margin: 8px 0 0; font-size: 16px; color: #656d76; }
+  .branches { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; }
+  .branches > div { background: #fff8f0; border-left: 6px solid #bf5700; border-radius: 6px; padding: 10px 16px; font-size: 18px; }
+  .branches b { color: #953800; }
 ---
 
 <!-- _class: lead -->
@@ -62,8 +84,8 @@ Onboard, adopt and monitor them without slowing teams down
 
 <!--
 Time: 0:30. Elapsed: 0:30.
-This is an alternative to the original deck, not its replacement.
-The talk has two separate parts. First explain the general framework without the Contoso story. Then apply it in chronological order, without stopping for another principles lecture.
+This is the deck the site links to. The original deck is still published at /slides/.
+The talk has two separate parts. First explain the general framework without the Contoso story. Then show Contoso applying it step by step, naming the Part 1 principles at each step.
 Presentation: 27 minutes. Questions: 3 minutes. Backup slides are outside that time.
 -->
 
@@ -91,9 +113,9 @@ Make the secure path the fastest path.
 
 **Contoso applies the framework**
 
-- Clean up the existing fleet.
-- Follow one action into production.
-- Update, detect, contain and recover.
+- Meet Contoso, and its bad day.
+- Map the new workflow, steps 0–7.
+- Walk each step, principle by principle.
 
 A fictional story with concrete decisions.
 
@@ -102,7 +124,7 @@ A fictional story with concrete decisions.
 
 <!--
 Time: 0:30. Elapsed: 1:00.
-Three minutes of context, nine minutes on principles, twelve minutes on practice, three minutes to bring it back to the audience, then questions.
+Three minutes of context, nine on principles, thirteen on practice, two to bring it back to the audience, then questions.
 The guide uses the same two-part structure. The complete settings checklist is in backup, not a third section in the middle of the story.
 -->
 
@@ -169,14 +191,14 @@ The framework, before the story
 
 <!--
 Time: 0:15. Elapsed: 3:15.
-No fictional characters in this part. These are the ten principles from the guide, grouped for the talk. Their original numbers are retained so the audience can find them in the guide.
+No Contoso story in this part. These are the ten principles from the guide, grouped for the talk. They follow the same order as the guide.
 -->
 
 ---
 
 <p class="section-label">Part 1 · Principles</p>
 
-# 1. Make the secure path the fastest path
+# Make the secure path the fastest path
 
 Search the catalog → Request what's missing → Get a decision → Copy the snippet
 
@@ -194,7 +216,7 @@ Search the catalog → Request what's missing → Get a decision → Copy the sn
 
 <!--
 Time: 1:45. Elapsed: 5:00.
-Principle 1 underpins all three groups on the next slides.
+This principle underpins all three groups on the next slides.
 The requesting dev team is the sponsor: it shares responsibility for review, testing and keeping the action current. Other consuming teams must use it within its limits and migrate on time.
 This is a self-service product, not a security ticket queue. A portal, GitHub issue forms or an existing ITSM tool can provide the front door.
 The two turnaround times come from two onboarding routes. The next slide explains them.
@@ -237,7 +259,7 @@ The two turnaround times come from two onboarding routes. The next slide explain
 
 <!--
 Time: 1:00. Elapsed: 6:00.
-This is the one deliberate exception to principle 2. It's what makes the fast path possible for the actions teams use most.
+This is the one deliberate exception to "only run what you've approved, at exact SHAs". It's what makes the fast path possible for the actions teams use most.
 Allowing owner/repo@* saves review work and allowlist entries, but it lets in future SHAs nobody reviewed. Accept that only for a short list of organizations.
 Pick the publishers you already depend on most. Good criteria: a verified identity, a security policy, enforced 2FA, and protected tags or immutable releases. Review the list twice a year.
 Allow trusted publishers per repository, not with owner/*, which trusts repositories that don't exist yet. The "Allow actions created by GitHub" checkbox also covers archived repositories.
@@ -255,7 +277,7 @@ In Part 2, the Infra team's azure/login request takes the fast track and Fabrika
 <div class="cards">
 <div>
 
-### 2. Only run what you've approved, at exact SHAs
+### Only run what you've approved, at exact SHAs
 
 Enforce an allowlist generated from the catalog.
 
@@ -264,7 +286,7 @@ Exact SHAs, except for your trusted publishers.
 </div>
 <div>
 
-### 3. Pin everything to a full commit SHA
+### Pin everything to a full commit SHA
 
 Tags move. Commits don't.
 
@@ -273,7 +295,7 @@ Keep the version as a comment for humans.
 </div>
 <div>
 
-### 4. Review the code that actually runs
+### Review the code that actually runs
 
 Read the bundle, hooks and nested actions.
 
@@ -302,7 +324,7 @@ Full allowlist syntax is in backup.
 <div class="cols">
 <div class="route">
 
-### 5. Keep tokens and secrets on a short leash
+### Keep tokens and secrets on a short leash
 
 - Read-only by default; grant permissions per job.
 - Keep secrets away from third-party code.
@@ -312,7 +334,7 @@ Full allowlist syntax is in backup.
 </div>
 <div class="route">
 
-### 6. Lock down the runner, with the team that runs it
+### Lock down the runner, with the team that runs it
 
 - One job, then discard the runner.
 - Default-deny egress on self-hosted runners.
@@ -342,10 +364,10 @@ The Infra team owns egress. The catalog declares exact destinations, approved ru
 
 | Principle | What must keep happening |
 |---|---|
-| **7. Know what you run, and who owns it** | Catalog, daily inventory, runtime evidence and a sponsor |
-| **8. Keep watching** | Daily advisory checks; detections on what actually ran, trusted publishers included |
-| **9. Let every approval expire** | Migrate off old SHAs; remove them on the date; expire exceptions too |
-| **10. Be ready for the day an action goes bad** | Block, scope, rotate and recover with a rehearsed runbook |
+| **Know what you run, and who owns it** | Catalog, daily inventory, runtime evidence and a sponsor |
+| **Keep watching** | Daily advisory checks; detections on what actually ran, trusted publishers included |
+| **Let every approval expire** | Migrate off old SHAs; remove them on the date; expire exceptions too |
+| **Be ready for the day an action goes bad** | Block, scope, rotate and recover with a rehearsed runbook |
 
 <div class="route">Approved SHA → Watched while in use → Updated or blocked → Retired</div>
 
@@ -370,26 +392,90 @@ Transition: the framework is complete. From here, follow Contoso chronologically
 
 How Contoso puts the framework to work
 
-<div class="route">Bootstrap → Request → Onboard → Adopt → Monitor → Update → Respond → Recover</div>
+<div class="route">Contoso → The incident → Why so slow → The post-mortem → The new workflow → Steps 0–7</div>
 
 <!--
 Time: 0:15. Elapsed: 12:15.
-Clear boundary: the general guidance is finished. Contoso, Fabrikam, the people and the numbers in this part are fictional, based on real incidents and practices.
-The scenes follow steps 0–7 from the guide. They demonstrate decisions and results, not a second explanation of the whole framework.
+Clear boundary: the general guidance is finished. Contoso, Fabrikam and the numbers in this part are fictional, based on real incidents and practices. The slides use team names only; the guide gives each team a character (Marta for platform, Sam for security, Ana for Payments) if you want to tell it as a story.
+The story: who Contoso is, what happened, why it took so long, what was missing, and the workflow they built. Every step slide names the Part 1 principles it applies, using the same short names.
+-->
+
+---
+
+<p class="section-label">Part 2 · Practice · Early 2025</p>
+
+# Meet Contoso
+
+<div class="cards">
+<div>
+
+<b class="metric">1,000+</b>
+developers in 100+ teams
+
+</div>
+<div>
+
+<b class="metric">2,100</b>
+private repositories on GitHub Enterprise
+
+</div>
+<div>
+
+<b class="metric">Azure</b>
+for infrastructure, Entra ID for identities
+
+</div>
+</div>
+
+<div class="cards" style="grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 20px; font-size: 20px;">
+<div>
+
+**Platform team**
+Runs GitHub Enterprise as a self-service product
+
+</div>
+<div>
+
+**Security team**
+Security tooling and incident response
+
+</div>
+<div>
+
+**Infra team**
+Self-hosted runners, network, Azure identities
+
+</div>
+<div>
+
+**Dev teams**
+Build and ship with GitHub Actions
+
+</div>
+</div>
+
+<div class="takeaway">Four teams touch CI/CD. Each one owns its part. Nothing connects them.</div>
+
+<!--
+Time: 0:45. Elapsed: 13:00.
+Contoso is fictional. A typical large enterprise: not fully regulated, but security and governance are priorities.
+GitHub Advanced Security is on: CodeQL, secret scanning and Dependabot.
+The platform team treats developers as customers and balances security with delivery speed. That matters later: it's why the fast path is part of the answer.
+Set up the last line: nobody is missing, but nobody holds the whole picture. That's what the incident exposes.
 -->
 
 ---
 
 <style scoped>
-.cards + p { margin-top: 24px; }
+.cards + p { margin-top: 20px; }
 </style>
 
 <p class="section-label">Part 2 · Practice · March 2025</p>
 
-# Contoso has a bad day
+# The incident: a moved tag reaches Contoso
 
-Twenty-four repositories used `tj-actions/changed-files` **by tag**.
-One release job held the build bot's broadly privileged token.
+**Public record:** an attacker moved the tags of `tj-actions/changed-files` to a malicious commit that dumped runner secrets into the logs.
+**Contoso:** 24 repositories used it by tag. One release job held the build bot's token, with write access to every repository.
 
 <div class="cards">
 <div>
@@ -412,87 +498,61 @@ of frozen releases
 </div>
 </div>
 
-**Marta (Platform)**, **Sam (Security)**, **Ana (Payments)** and the **Infra team** agree on one process.
-
-<div class="takeaway">The brief: make third-party actions safer, without slowing teams down.</div>
+<div class="takeaway">The action leaked secrets for about a day. The attacker used them for three weeks.</div>
 
 <!--
-Time: 1:15. Elapsed: 13:30.
-All company outcomes on this slide are fictional. The underlying tj-actions incident is public record, described in the opening.
-Contoso has 1,000+ developers in 100+ teams, with 2,100 private repositories and Azure infrastructure.
-The leaked classic PAT could clone every repository and write workflows. The attacker stole more secrets, reached Azure and poisoned a shared npm package. Finding usage took four days; blocking took a day.
-Four teams held parts of the answer but had no shared owner or channel. Don't retell every attack path; establish why the operating model must change.
+Time: 1:00. Elapsed: 14:00.
+Keep the two layers apart: the tag move and the secrets in logs are public record (CVE-2025-30066). Everything about Contoso is fictional.
+The token was a classic personal access token with the repo and workflow scopes. Within hours the attacker cloned all 2,100 private repositories and harvested old secrets from Git history; secret scanning had flagged most of them years before.
+With the workflow scope, the attacker pushed a one-file workflow to 40 repositories to steal their secrets. One was AZURE_CREDENTIALS, Owner on production: customer data was copied out, and new secrets were added to three other app registrations.
+The bot could bypass branch protection, so a poisoned npm package shipped through the normal pipeline into 70 services over 9 days.
+Customer data meant a breach notification. Don't retell every path; the next slide is about why it went so badly.
 -->
 
 ---
 
-<p class="section-label">Part 2 · Practice · 0 · Bootstrap</p>
+<style scoped>
+.timeline { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 14px; margin: 6px 0 22px; }
+.timeline::before { content: ""; position: absolute; left: 0; right: 0; top: 7px; height: 3px; background: #d0d7de; }
+.timeline > div { position: relative; padding-top: 26px; font-size: 17px; line-height: 1.3; }
+.timeline > div::before { content: ""; position: absolute; top: 0; left: 0; width: 17px; height: 17px; border-radius: 50%; background: #bf5700; }
+.timeline b { display: block; color: #953800; font-size: 18px; margin-bottom: 2px; }
+.cards { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; font-size: 18px; line-height: 1.35; }
+.cards > div { padding: 14px 16px; }
+.cards b { display: block; color: #0b5cad; font-size: 19px; margin-bottom: 4px; }
+</style>
 
-# First, clean up what's already running
+<p class="section-label">Part 2 · Practice · March 2025</p>
 
-**April 2025:** Marta's inventory finds 350 third-party actions.
-Twenty-two do the same thing: post to Slack.
+# Why it took three weeks: four teams, four silos
 
-| Order | What Contoso does |
-|---|---|
-| **Discover** | Read workflows and job logs; resolve tags and nested actions |
-| **Reduce** | Drop duplicates; review untrusted SHAs in use; assign sponsors |
-| **Prepare** | Seed the catalog and allowlist; open pinning pull requests |
-| **Enforce** | Warn first, then allowlist, require SHA pins, then block policy failures |
+<div class="timeline">
+<div><b>Day 1</b>Security spots the clones, by chance</div>
+<div><b>Day 1, +3 h</b>Still finding who can change the Actions policy</div>
+<div><b>Day 2</b>The action is finally blocked</div>
+<div><b>Day 3</b>The Infra team hears about it</div>
+<div><b>Day 4</b>Every workflow using it is found</div>
+<div><b>Week 3</b>The attacker's new Entra ID secrets are found</div>
+</div>
 
-The **Infra team** prepares ephemeral runners and baseline egress rules.
+<div class="cards">
+<div><b>Security team</b>Saw it a day late: the audit log wasn't streamed. Had flagged unpinned actions in a report nobody else read.</div>
+<div><b>Platform team</b>SHA pinning sat on the backlog, waiting for a business case. Nobody owned the Actions policy.</div>
+<div><b>Dev teams</b>Had stopped asking and built their own fixes. With no inventory, they rotated everything they could find.</div>
+<div><b>Infra team</b>Owned the Azure identities, but was told on day 3. It was "a GitHub problem".</div>
+</div>
 
-<div class="takeaway">Existing teams get migration help before the restrictions arrive.</div>
+<div class="takeaway">Every hour spent finding each other was an hour the attacker kept.</div>
 
 <!--
-Time: 1:15. Elapsed: 14:45.
-The inventory found 1,800 uses lines; two thirds used tags. The declared inventory and the last 90 days of job logs answer different questions.
-Start with jobs holding secrets. Trusted repositories are allowlisted; untrusted SHAs get reviewed. Every retained action gets a sponsor.
-Announce each enforcement step a month ahead, one organization at a time. Break-glass works from day one.
-Do not turn this into the detailed bootstrap procedure; the result is a controlled starting point for the new request.
--->
-
----
-
-<p class="section-label">Part 2 · Practice · 1 · Request → 2 · Onboarding</p>
-
-# Ana needs Helm diffs on pull requests
-
-**September 2025:** the catalog has no match.
-**Ana (Sponsor)** requests `fabrikam-oss/helm-diff-action`.
-
-<div class="cols">
-<div class="route">
-
-### 2a · Trusted Publisher Onboarding
-
-The Infra team's `azure/login` request takes the fast track.
-
-Identity and advisory checks, then allowlist that repository.
-
-**Next morning. Target: 1–2 business days.**
-
-</div>
-<div class="route">
-
-### 2b · Untrusted Publisher Onboarding
-
-Fabrikam isn't trusted. Platform and Payments review the exact SHA in isolation.
-
-The catalog records its access, network and sponsor.
-
-**Four days. Target: 3–5 business days.**
-
-</div>
-</div>
-
-<!--
-Time: 1:30. Elapsed: 16:15.
-Ana first searches the catalog, then records the need, alternatives, repositories, permissions, secrets, OIDC and network. A complete request starts the clock.
-Contoso's trusted publishers are actions, github, microsoft and azure, allowed per repository. This is Contoso's choice, not a universal recommended list.
-For Fabrikam v2.5.0, Platform keeps a copy at the upstream SHA in an isolated Review GHE, scans it and reviews with the sponsor. Security joins risky requests. Infra applies any new destination rule within the onboarding window.
-The approved access contract is contents: read, no secrets, no OIDC, network charts.contoso.internal. Workflows use the upstream at the approved SHA.
-Keep the focus on why the two requests take different paths; the review checklist is in the guide.
+Time: 1:00. Elapsed: 15:00.
+Days count from when the security team noticed the clones, which was already a day after the leak.
+Seeing it: nothing watched the audit log. The clones were spotted almost by chance, and the build bot's Git events were about to expire: the audit log keeps them for only seven days.
+Stopping it: security had raised unpinned actions in a quarterly report nobody outside security read. Platform had SHA pinning on its backlog. Nobody owned the Actions policy, so the first three hours went on finding out who could change it.
+Scoping it: dev teams had stopped asking the platform team and built their own fixes. With no inventory, finding every usage took four days. With no map of which job held which secret, teams rotated everything they could find, and missed the secrets taken from other repositories.
+Cutting off the cloud: the Infra team owned the service principals but heard on day 3. The new app registration secrets turned up in week 3, in a manual review of the Entra ID audit logs.
+Trusting the code: the bot's commits had no review, so the poisoned npm package stayed live for 9 days.
+Nobody was missing. Nobody was connected. The next slide turns each gap into a principle.
 -->
 
 ---
@@ -500,252 +560,408 @@ Keep the focus on why the two requests take different paths; the review checklis
 <!-- _class: dense -->
 
 <style scoped>
-pre { font-size: 18px; line-height: 1.35; margin: 4px 0; }
+table { font-size: 19px; }
+th, td { padding: 5px 12px; }
+td:last-child { white-space: nowrap; }
+.note { font-size: 16px; color: #656d76; margin-top: 10px; }
+</style>
+
+<p class="section-label">Part 2 · Practice · The post-mortem</p>
+
+# The post-mortem: every gap maps to a principle
+
+| What went wrong | Principle from Part 1 |
+|---|---|
+| A moved tag delivered malicious code | <b class="principle">Only run what's approved</b> and <b class="principle">Pin to a full SHA</b> |
+| Nobody had ever looked at the action's code | <b class="principle">Review what runs</b> |
+| The job held secrets; one token reached every repository and Azure | <b class="principle">Short leash</b> |
+| Nothing limited where the payload could send data | <b class="principle">Lock down the runner</b> |
+| Four days to find every workflow that used it | <b class="principle">Know what you run</b> |
+| The first alert came a day late | <b class="principle">Keep watching</b> |
+| Teams added any action they liked | <b class="principle">Fastest path</b> |
+| A day to block, weeks to rotate | <b class="principle">Be ready</b> |
+| Four teams each held part of the answer | One process with owners → **next slide** |
+
+<p class="note"><b class="principle">Let every approval expire</b> has no row: the incident didn't need it, but an approved SHA doesn't stay safe forever (step 5).</p>
+
+<!--
+Time: 0:45. Elapsed: 15:45.
+This is the bridge between the two parts. Each row is a gap from the incident; each answer is a principle the audience heard in Part 1.
+The previous slide showed why it took so long. Here, turn each of those delays into the principle that prevents it.
+One token, one secret: bots move to GitHub Apps with short-lived tokens, and Azure deployments to OIDC.
+The last row isn't a principle: it's the operating model, and it's what the next slide shows.
+-->
+
+---
+
+<p class="section-label">Part 2 · Practice · The new workflow</p>
+
+# The new workflow: eight steps, clear owners
+
+<div class="flow">
+<div><b>0 · Bootstrap</b>Inventory, catalog, SHA pins<span class="who">Platform</span></div>
+<div><b>1 · Request</b>Self-service: need, owner, access<span class="who">Dev team (sponsor)</span></div>
+<div><b>2 · Onboarding</b>2a fast track<br>2b full review<span class="who">Platform + sponsor</span></div>
+<div><b>3 · Adoption</b>Teams use approved SHAs<span class="who">Dev teams</span></div>
+<div><b>4 · Monitoring</b>Inventory, run evidence, SIEM alerts<span class="who">Platform + Security</span></div>
+<div><b>5 · Lifecycle</b>5a updates<br>5b vulnerabilities<br>5c removal<span class="who">Platform + dev teams</span></div>
+</div>
+
+<p class="loop">↺ Every new SHA returns to review (5 → 1)</p>
+
+<div class="branches">
+<div><b>6 · Compromise response</b>Block, scope, rotate, recover. Any time a credible signal arrives.<span class="who">Platform + Security, with Infra</span></div>
+<div><b>7 · Break-glass</b>Temporary SHA, two approvers. Expires in 7 days at most.<span class="who">Platform + Security approve</span></div>
+</div>
+
+<div class="takeaway">Platform runs the process. Every step has an owner, and all four teams share one channel.</div>
+
+<!--
+Time: 1:00. Elapsed: 16:45.
+This is the map for the rest of Part 2. The step numbers and names match the guide and its full diagram (backup slide).
+Steps 0 to 5 are the normal path. 6 and 7 are exceptions that can start from anywhere.
+The Infra team turns approved network destinations into egress rules during onboarding, and sends blocked-egress logs to the SIEM. The security team joins risky requests.
+From here, each slide shows one step: what happened at Contoso, and which principles it applies. Watch the strip at the top.
+-->
+
+---
+
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span class="on">0 · Bootstrap</span><span>1 · Request</span><span>2 · Onboarding</span><span>3 · Adoption</span><span>4 · Monitoring</span><span>5 · Lifecycle</span><span>6 · Compromise</span><span>7 · Break-glass</span></div>
+
+# Clean up what's already running
+
+<div class="step">
+<div>
+
+<p class="moment"><b>April 2025.</b> The first inventory finds 350 third-party actions. Two thirds use a tag. Twenty-two of them post to Slack.</p>
+
+- Inventory what workflows declare and what job logs show actually ran.
+- Keep trusted publishers, review untrusted SHAs in use, drop duplicates. Every action gets a sponsor.
+- Open pinning pull requests. Warn first, then allowlist, require SHA pins, then block.
+
+</div>
+<div class="applied">
+
+<h3>Principles applied</h3>
+<p><b>Know what you run:</b> an inventory, and a sponsor for every action</p>
+<p><b>Pin to a full SHA:</b> pull requests rewrite every <code>uses:</code> line</p>
+<p><b>Only run what's approved:</b> the catalog seeds the allowlist</p>
+<p><b>Fastest path:</b> warnings and migration help before enforcement</p>
+
+</div>
+</div>
+
+<div class="takeaway">Done when every workflow uses full SHAs, every action has a sponsor, and enforcement is on.</div>
+
+<!--
+Time: 1:00. Elapsed: 17:45.
+The inventory found 1,800 uses lines. What workflows declare and what job logs show ran answer different questions; you need both.
+Start with the jobs that hold secrets. Untrusted actions that fail review get replaced within 30 days.
+Announce each enforcement step a month ahead, one organization at a time. Break-glass works from day one, so enforcement never leaves a team stuck.
+The Infra team moves to ephemeral runners and a baseline egress allowlist from the traffic runners already make.
+-->
+
+---
+
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span>0 · Bootstrap</span><span class="on">1 · Request</span><span class="on">2 · Onboarding</span><span>3 · Adoption</span><span>4 · Monitoring</span><span>5 · Lifecycle</span><span>6 · Compromise</span><span>7 · Break-glass</span></div>
+
+# Payments needs Helm diffs on pull requests
+
+<div class="step">
+<div>
+
+<p class="moment"><b>September 2025.</b> The catalog has no match. The Payments team requests <code>fabrikam-oss/helm-diff-action</code> and becomes its sponsor.</p>
+
+- **1 · Request:** the form records the need, repositories, access and network.
+- **2a · Trusted:** the Infra team's `azure/login` is allowlisted the next morning.
+- **2b · Untrusted:** platform and Payments review Fabrikam's exact SHA in an isolated copy. Approved in four days.
+
+</div>
+<div class="applied">
+
+<h3>Principles applied</h3>
+<p><b>Fastest path:</b> published targets, 1–2 and 3–5 business days</p>
+<p><b>Only run what's approved:</b> a repository for trusted, one SHA for the rest</p>
+<p><b>Review what runs:</b> the exact SHA, isolated and scanned</p>
+<p><b>Lock down the runner:</b> Infra approves new destinations</p>
+
+</div>
+</div>
+
+<div class="takeaway">The catalog records the contract: contents: read, no secrets, one network destination.</div>
+
+<!--
+Time: 1:15. Elapsed: 19:00.
+The Payments team searches the catalog first, then fills in the form: need, alternatives, repositories, permissions, secrets, OIDC and network. A complete request starts the clock; triage within a business day. Anything touching secrets, write access or OIDC is flagged to security.
+Contoso's trusted publishers are actions, github, microsoft and azure, allowed per repository. That's Contoso's choice, not a universal list.
+For Fabrikam v2.5.0, the platform team keeps a copy at the upstream SHA in an isolated Review GHE, runs GHAS, the Advisory Database, Scorecard and zizmor, and decides with the sponsor. Workflows use the upstream at the approved SHA.
+The network destination is charts.contoso.internal. The Infra team applies the egress rule within the onboarding window.
+-->
+
+---
+
+<style scoped>
+pre { font-size: 17px; line-height: 1.35; margin: 6px 0 0; }
 pre code { font-size: inherit; }
 </style>
 
-<p class="section-label">Part 2 · Practice · 3 · Adoption</p>
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span>0 · Bootstrap</span><span>1 · Request</span><span>2 · Onboarding</span><span class="on">3 · Adoption</span><span>4 · Monitoring</span><span>5 · Lifecycle</span><span>6 · Compromise</span><span>7 · Break-glass</span></div>
 
 # The first policy check fails. The second passes.
 
-<div class="cols">
+<div class="step">
 <div>
 
-### First attempt (excerpt)
-
-```yaml
-jobs:
-  diff:
-    env:
-      KUBECONFIG: ${{ secrets.KUBECONFIG_PROD }}
-    steps:
-      - uses: fabrikam-oss/helm-diff-action@<sha>
-```
-
-**Blocked:** the catalog says no secrets.
-
-</div>
-<div>
-
-### Split jobs (excerpt)
+<p class="moment">The job running the Helm action also holds <code>KUBECONFIG_PROD</code>. The catalog says no secrets, so the check fails. Payments splits the job:</p>
 
 ```yaml
 permissions: {}
 jobs:
-  diff:      # Helm action; no secrets
+  diff:     # Helm action, no secrets
     permissions: { contents: read }
-    # Upload the diff artifact.
-  comment:   # No Helm action
+  comment:  # posts the diff, no Helm action
     needs: diff
     permissions: { pull-requests: write }
-    # Download diff; post with gh.
 ```
 
-**Passes:** the action stays within its limits.
+</div>
+<div class="applied">
+
+<h3>Principles applied</h3>
+<p><b>Short leash:</b> third-party code runs in a job with no secrets</p>
+<p><b>Pin to a full SHA:</b> the catalog snippet, with a version comment</p>
+<p><b>Only run what's approved:</b> the policy check enforces the catalog's limits</p>
 
 </div>
 </div>
 
-<div class="takeaway">Same developer outcome. The Helm action no longer sits next to production credentials.</div>
+<div class="takeaway">Same result for the developer. The action no longer sits next to production credentials.</div>
 
 <!--
-Time: 1:45. Elapsed: 18:00.
-Both snippets are excerpts, not complete runnable workflows. The full example is in Chapter 6 of the guide.
-Use the catalog SHA with a version comment; checkout uses persist-credentials: false. All remote actions, including artifact helpers, are pinned.
-The diff job runs the untrusted Helm action without secrets. The comment job downloads the artifact using the approved trusted helper and posts it with gh; it doesn't execute the Helm action.
-The required policy check reads the protected catalog. It checks permissions and secret paths including env, with, secrets: inherit and toJSON(secrets). A failure links Ana to the approved snippet and request route.
-Ana tests in a non-production workflow before other teams adopt it.
+Time: 1:00. Elapsed: 20:00.
+An excerpt, not a runnable workflow; the full version is in Chapter 6 of the guide.
+The diff job checks out with persist-credentials: false, runs the Helm action and uploads the diff as an artifact. The comment job downloads it and posts it with gh. Every remote action is pinned.
+The policy check is a required workflow through an organization ruleset. It reads the catalog from its own protected repository, and checks env, with, secrets: inherit and toJSON(secrets). The failure links to the catalog and the request form.
+Payments tests in a non-production workflow first.
 -->
 
 ---
 
-<p class="section-label">Part 2 · Practice · 4 · Monitoring usage</p>
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span>0 · Bootstrap</span><span>1 · Request</span><span>2 · Onboarding</span><span>3 · Adoption</span><span class="on">4 · Monitoring</span><span>5 · Lifecycle</span><span>6 · Compromise</span><span>7 · Break-glass</span></div>
 
-# October: the workflow passed, but a token leaked in
+# The check passed, but a token leaked in
 
-A workflow-level `env:` gave `NPM_TOKEN` to every job.
-The policy check had only inspected job-level `env:`.
+<div class="step">
+<div>
 
-| Evidence | What it tells Marta and Sam |
-|---|---|
-| **Catalog** | This action is allowed no secrets |
-| **Daily inventory** | Which repositories declare the action and SHA |
-| **Job logs + audit log** | Which action ran and which secrets its job received |
-| **Runner network logs** | Which outbound calls were blocked |
+<p class="moment"><b>October 2025.</b> A workflow-level <code>env:</code> handed <code>NPM_TOKEN</code> to every job, the Helm diff included. The policy check only looked at job-level <code>env:</code>.</p>
 
-**Sam (Security)** flags the mismatch. Payments fixes the workflow that afternoon.
-**Marta (Platform)** fixes the check the next day.
+- Every day, compare what ran (job logs, audit log) with the catalog.
+- The security team flags the mismatch. Payments fixes the workflow that afternoon.
+- The platform team fixes the check the next day.
 
-<div class="takeaway">Runtime evidence catches a mistake the pull-request check missed.</div>
+</div>
+<div class="applied">
+
+<h3>Principles applied</h3>
+<p><b>Know what you run:</b> what's declared, and what actually ran with which secrets</p>
+<p><b>Keep watching:</b> detections on run evidence, not just on files</p>
+
+</div>
+</div>
+
+<div class="takeaway">Run evidence catches what the pull-request check missed.</div>
 
 <!--
-Time: 1:15. Elapsed: 19:15.
-Job logs list downloaded actions and SHAs, including nested actions. workflows.prepared_workflow_job lists the secrets the job received. Join by run; neither source alone answers both questions.
-Security owns SIEM detections, Platform owns collection and inventory, and Infra sends blocked-egress logs. The shared channel gets the alert to the team that can act.
-Don't introduce the separate December token-cloning drill here. It is another example in Chapter 7, not another storyline for this talk.
+Time: 1:00. Elapsed: 21:00.
+The job logs list every action the runner downloaded, nested ones included, with its SHA. The workflows.prepared_workflow_job audit log event lists the secrets each job received. Join them by run; neither answers both questions alone.
+The platform team collects the inventory and run evidence, the security team owns the SIEM detections, and the Infra team sends blocked-egress logs.
+Before the incident, this alert would have sat in a security queue. Now it lands in the shared channel with the team that can fix it.
 -->
 
 ---
 
-<p class="section-label">Part 2 · Practice · 5 · Lifecycle management</p>
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span>0 · Bootstrap</span><span>1 · Request</span><span>2 · Onboarding</span><span>3 · Adoption</span><span>4 · Monitoring</span><span class="on">5 · Lifecycle</span><span>6 · Compromise</span><span>7 · Break-glass</span></div>
 
-# November: a new version enters. The old one leaves.
+# A new version enters. The old one leaves.
 
-<div class="cards">
+<div class="step">
 <div>
 
-### 5a · Version Updates
+<p class="moment"><b>November 2025.</b> Fabrikam ships v2.6.0. Payments asks for it.</p>
 
-Ana requests **v2.6.0**.
-
-A fresh review approves its SHA. The catalog gives v2.5.0 an expiry date.
-
-</div>
-<div>
-
-### 5b · Vulnerability Management
-
-Daily checks keep covering **both live SHAs**.
-
-A security fix skips the wait, never the review.
+- **5a · Updates:** v2.6.0 goes through the full review again. Approved in three days.
+- **5b · Vulnerabilities:** daily checks cover both live SHAs.
+- **5c · Removal:** v2.5.0 expires in three months. Teams get warnings and pull requests. In February it leaves the allowlist.
 
 </div>
-<div>
+<div class="applied">
 
-### 5c · Deprecation and Removal
-
-Teams get warnings and migration pull requests.
-
-By February, nobody uses v2.5.0. It leaves the allowlist.
+<h3>Principles applied</h3>
+<p><b>Let approvals expire:</b> the old SHA goes 3 months after the new one</p>
+<p><b>Review what runs:</b> every new SHA is reviewed again</p>
+<p><b>Keep watching:</b> advisories, Dependabot on review copies, moved tags</p>
 
 </div>
 </div>
 
-<div class="route">New approval → Migration window → Old SHA removed</div>
+<div class="takeaway">Nobody is still on v2.5.0 when it's removed.</div>
 
 <!--
-Time: 1:15. Elapsed: 20:30.
-The new feature is OCI chart support. v2.6.0 is approved in three days; migration PRs follow a week after the release. The v2.5.0 SHA expires three months after the new approval.
-High findings shorten the window to 30 days; Critical to the same day. Suspected compromise goes directly to Step 6.
-Daily checks cover advisories for every live action, Dependabot on review copies and moved upstream tags. Keep at most two live SHAs per untrusted action.
-Archive a retired SHA's review copy after 30 days. Expiry is a planned migration, not a surprise red build.
+Time: 0:45. Elapsed: 21:45.
+Migration pull requests land 7 days after a feature release, so a bad release has time to surface; right away for a security fix.
+A High finding shortens the window to 30 days, Critical to the same day. Anything that looks like a compromise goes straight to step 6.
+Warnings arrive as code scanning alerts in each affected repository, where developers already look. The review copy is archived 30 days after its SHA is gone.
 -->
 
 ---
 
 <!-- _class: dense -->
 
-<p class="section-label">Part 2 · Practice · 6 · Compromise response</p>
+<style scoped>
+table { font-size: 19px; }
+th, td { padding: 5px 10px; }
+td:first-child, td:last-child { white-space: nowrap; }
+.moment { margin-bottom: 12px; }
+.step { gap: 24px; }
+.applied p { font-size: 18px; margin-top: 8px; }
+.applied p b { color: #1f2328; }
+.applied p.last { color: #424a53; }
+.chips { margin-top: 12px; }
+</style>
 
-# February: the approved action turns malicious
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span>0 · Bootstrap</span><span>1 · Request</span><span>2 · Onboarding</span><span>3 · Adoption</span><span>4 · Monitoring</span><span>5 · Lifecycle</span><span class="on">6 · Compromise</span><span>7 · Break-glass</span></div>
 
-**10:12** Egress alerts → **10:14** Shared incident → **10:41** Action blocked
+# The approved action turns malicious
 
-A bundled dependency in v2.6.0 carried a dormant payload.
-**The review missed it.**
+<p class="moment"><b>February 2026.</b> 10:12 egress alerts → 10:14 incident opened in the shared channel → 10:41 action blocked. A dormant payload in v2.6.0 got past the review.</p>
 
-| Fictional Contoso outcomes | March 2025 | February 2026 |
+<div class="step">
+<div>
+
+| Fictional outcomes | 2025 | 2026 |
 |---|---|---|
 | Time to block | A day | **29 minutes** |
 | Finding affected runs | Four days | **One query** |
 | Credentials rotated | 250+ | **1** |
 | What leaked | Source code, Azure access, customer data | **Some Helm charts** |
 
-<div class="takeaway">Review reduced risk. Restricted access, egress controls, evidence and owners limited the damage.</div>
+</div>
+<div class="applied">
+
+<h3>One query, because the data was ready</h3>
+<p><b>Job logs:</b> every run of v2.6.0, with its SHA</p>
+<p><b>Audit log in the SIEM:</b> the secrets each job received</p>
+<p><b>Inventory and catalog:</b> repositories, owners, allowed access</p>
+<p class="last">The teams knew where each source lives, kept it long enough, and had the query written before the incident.</p>
+
+</div>
+</div>
+
+<div class="chips">
+<span><b>Be ready:</b> one deny entry, one query</span>
+<span><b>Short leash:</b> no secrets in the job</span>
+<span><b>Lock down the runner:</b> egress blocked it</span>
+</div>
 
 <!--
-Time: 1:45. Elapsed: 22:15.
-Sam sees blocked calls to an unknown domain. Fabrikam confirms the payload at 10:30. Platform blocks the action, cancels running jobs and uses run evidence to scope exposure since the SHA was approved, not just since the alert.
-Self-hosted runners blocked all outbound calls. Two repositories used standard GitHub-hosted runners and leaked some Helm charts; their jobs had no secrets and only a job-scoped read-only token.
-One other job received SONAR_TOKEN through a reusable workflow that the policy check didn't cover. It was rotated within the hour. The process isn't perfect, and the story shouldn't claim zero exposure.
-Teams rotate exposed credentials and revoke old ones, and rebuild affected outputs. Security investigates; Infra owns network containment. The action's dormant payload was not caught by the review.
-These are different fictional incidents, not a controlled benchmark. The comparison illustrates reduced blast radius, not a guarantee.
+Time: 1:30. Elapsed: 23:15.
+This is the climax: the review missed it, and the rest of the principles limited the damage.
+The security team sees blocked calls to an unknown domain. Fabrikam confirms the payload at 10:30. The platform team adds !owner/repo@*, cancels running jobs, and scopes every run since the SHA was approved, not just since the alert.
+Why scoping took one query: the evidence was already collected, in known places. Job logs, gathered on each workflow_job webhook, list every action the runner downloaded with its SHA. The workflows.prepared_workflow_job audit log event, streamed to the SIEM, lists the secrets each job received. Join them by run. The inventory and catalog add the repositories, sponsors and the access each job was allowed.
+Retention matters: the look-back starts in November, when v2.6.0 was approved, so the data had to be kept at least that long. In March 2025 nothing was streamed, and Git events were about to expire.
+The query was written and tested in drills before February. In an incident, nobody should be discovering where the logs live.
+Self-hosted runners blocked every outbound call. Two repositories ran the diff on GitHub-hosted runners, which have no egress control, but their jobs had no secrets: some Helm charts and a short-lived read-only token. One job had a SONAR_TOKEN through a reusable workflow the policy check didn't cover yet; it was rotated within the hour.
+These are two fictional incidents, not a benchmark. The comparison shows a smaller blast radius, not a guarantee.
 -->
 
 ---
 
-<p class="section-label">Part 2 · Practice · 7 · Break-glass</p>
+<p class="section-label">Part 2 · Practice</p>
+<div class="steps"><span>0 · Bootstrap</span><span>1 · Request</span><span>2 · Onboarding</span><span>3 · Adoption</span><span>4 · Monitoring</span><span>5 · Lifecycle</span><span>6 · Compromise</span><span class="on">7 · Break-glass</span></div>
 
 # Payments is blocked. The answer isn't "bypass it."
 
-**Ana (Sponsor)** asks to use clean, reviewed **v2.5.0**, now expired.
+<div class="step">
+<div>
 
-<div class="cols">
-<div class="route">
+<p class="moment"><b>The next morning.</b> The Helm diff is a required check, and every Payments pull request is red.</p>
 
-### A bounded exception
-
-- Platform **and** Security approve.
-- Payments repositories only.
-- No secrets; egress-controlled runners.
-- Seven days, with automatic removal.
+- Payments asks for the clean, reviewed v2.5.0, now expired.
+- Platform and security approve it for 7 days: Payments only, no secrets, egress-controlled runners.
+- Three days later, a clean v2.6.1 passes review. Payments moves, and the exception expires on its own.
 
 </div>
-<div class="route">
+<div class="applied">
 
-### A way back to normal
-
-- Narrow the block to the bad SHA.
-- Fabrikam releases clean **v2.6.1**.
-- Skip the wait, not the review.
-- Migrate; let the exception expire.
+<h3>Principles applied</h3>
+<p><b>Fastest path:</b> delivery unblocked within hours</p>
+<p><b>Let approvals expire:</b> the exception removes itself</p>
 
 </div>
 </div>
 
-<div class="takeaway">Delivery resumes without allowing compromised or unreviewed code.</div>
+<div class="takeaway">Never for compromised or unreviewed code.</div>
 
 <!--
-Time: 1:45. Elapsed: 24:00.
-The next morning, the required Helm diff check is red across Payments. Platform and Security approve the already-reviewed, clean v2.5.0 SHA for seven days.
-Default break-glass is 72 hours, seven days at most; two approvals within four hours. Automation removes the entry on the date and the policy check restricts the repositories.
-To allow the older SHA, replace the repository-wide deny with a deny for the bad v2.6.0 SHA, then add the scoped, temporary approval.
-Fabrikam releases v2.6.1 three days later. As a security fix it skips the queue and age wait, but it still gets the full review. Payments migrates and the exception expires.
-Never use break-glass for a compromised SHA or unreviewed code. Record the request, approvers and dates; review exceptions monthly.
-Part 2 ends here. We now leave Contoso and address the audience directly.
+Time: 0:45. Elapsed: 24:00.
+Two approvals within 4 hours, one from platform and one from security. 72 hours by default, 7 days at most.
+To allow the older SHA, the platform team narrows the block from the whole repository to the bad v2.6.0 SHA, then adds the temporary entry. The policy check limits it to Payments repositories.
+v2.6.1 is a security fix: it skips the 7-day wait, never the review.
+Every break-glass is recorded and reviewed once a month.
 -->
 
 ---
 
-<!-- _footer: "Takeaways · From principles to practice" -->
+<!-- _class: dense -->
 
-# The framework, demonstrated
+<style scoped>
+table { font-size: 19px; }
+th, td { padding: 5px 10px; }
+</style>
 
-| Part 1: the principle group | Part 2: what it changed |
+<p class="section-label">Part 2 · Practice · Recap</p>
+
+# Every principle, at work
+
+<div class="cols">
+<div>
+
+| Principle | Steps |
 |---|---|
-| **Approve what runs** | Ana gets a reviewed SHA through a published route |
-| **Limit what it can reach** | The later payload doesn't inherit production credentials |
-| **Keep managing it** | Old versions leave; evidence supports a fast, scoped response |
-
-<div class="cards">
-<div>
-
-### Platform + dev teams
-
-A usable path, with shared ownership
+| <b class="principle">Fastest path</b> | 0, 1–2, 7 |
+| <b class="principle">Only run what's approved</b> | 0, 1–2, 3 |
+| <b class="principle">Pin to a full SHA</b> | 0, 3 |
+| <b class="principle">Review what runs</b> | 1–2, 5 |
+| <b class="principle">Short leash</b> | 3, 6 |
 
 </div>
 <div>
 
-### Security + Infra team
-
-Detection and containment, already connected
-
-</div>
-<div>
-
-### All four teams
-
-One channel, one process, rehearsed
+| Principle | Steps |
+|---|---|
+| <b class="principle">Lock down the runner</b> | 1–2, 6 |
+| <b class="principle">Know what you run</b> | 0, 4 |
+| <b class="principle">Keep watching</b> | 4, 5 |
+| <b class="principle">Let approvals expire</b> | 5, 7 |
+| <b class="principle">Be ready</b> | 6 |
 
 </div>
 </div>
+
+<div class="takeaway">The review missed the payload. The other principles limited the damage, and the fast path kept teams on the approved route.</div>
 
 <!--
 Time: 1:00. Elapsed: 25:00.
-This is the single deliberate recap linking the two parts. Don't replay the ten principles or the lifecycle table.
-Principle 1 connects everything: speed is a security feature. A fast approved path reduces workarounds; recovery keeps it usable when something goes wrong.
-The compromise still happened. The improvement was a smaller blast radius, quicker scoping and a safe route back to delivery.
+The Steps column uses the step numbers from the workflow map.
+This closes the loop with the post-mortem: every gap from March 2025 now has an owner and a step.
+The compromise still happened. What changed was the blast radius, the time to scope it, and a safe way back to delivery.
 -->
 
 ---
@@ -911,6 +1127,6 @@ Pinning, daily monitoring and a fast deny entry still apply to trusted publisher
 ![bg contain](../assets/third-party-actions-lifecycle.svg)
 
 <!--
-Reference only: the full lifecycle diagram from the guide. Main-story steps preserve its numbers 0–7 and the 2a/2b and 5a/5b/5c branches.
+Reference only: the full lifecycle diagram from the guide. The workflow map in Part 2 is a simplified version with the same step numbers 0–7 and the 2a/2b and 5a/5b/5c branches.
 Use the PDF to zoom into the detail.
 -->
