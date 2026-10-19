@@ -278,6 +278,15 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 
 ### Prologue: The incident (Why This Matters)
 
+**Contoso, early 2025** (fictional):
+
+- 1,000+ developers in 100+ teams, all on GitHub Enterprise (GHE), with 2,100 private repositories.
+- A platform team that runs GHE as a self-service product, with automation for the setup. Developers are its customers, and it balances security with speed of delivery.
+- Not a fully regulated industry, but security and governance are priorities.
+- Azure for infrastructure and services, with Entra ID for identities.
+- GitHub Advanced Security, with CodeQL, secret scanning and Dependabot.
+- Four teams touch CI/CD: platform, security, Infra and the dev teams. Each one owns its part. Nothing connects them.
+
 > March 2025. Sam (Security), on call in Contoso's security team, spots the build bot cloning private repositories from IP addresses nobody knows. The trail leads to `tj-actions/changed-files`, used by tag in 24 Contoso repositories, three of them public. For about a day, those tags pointed at a commit that dumped the runner's secrets into the logs.
 
 **What really happened** (public record):
@@ -303,46 +312,26 @@ Each chapter is a short scene, followed by the steps: who does it, when, what, a
 - **Cutting off the cloud.** The Infra team owned the service principals, but nobody told them until day 3, because the incident was "a GitHub problem". The new app registration secrets turned up in week 3, in a manual review of the Entra ID audit logs.
 - **Trusting the code again.** The bot's commits had no review and looked like every other release. Finding the bad one meant reading every bot commit since the leak, across 2,100 repositories. That's how the npm package stayed live for 9 days.
 
-| What went wrong | What was missing |
-|---|---|
-| A moved tag delivered malicious code | An allowlist and SHA pinning |
-| Nobody had ever looked at the action | A review before approval |
-| The job held secrets it didn't need | Least privilege, and no secrets near third-party code |
-| One token could write to every repository, one secret could reach Azure | Short-lived, scoped tokens and OIDC |
-| Nothing limited where the payload could send data | Egress-controlled runners |
-| Four days to find every usage | An inventory with owners |
-| The first alert came a day late | Continuous monitoring |
-| Teams added any action they liked | A fast, approved route |
-| A day to block, weeks to rotate | A rehearsed response plan |
-
-### Chapter 1: Meet Contoso (Context and Assumptions)
+### Chapter 1: The post-mortem (Lessons and Decisions)
 
 > The post-mortem reaches the CTO on a Thursday. Its first finding isn't technical: platform, security and dev teams each saw part of the problem, and nobody saw all of it. On Friday, Marta (Platform), who leads the GitHub Enterprise platform team, gets her brief: "Make every third-party action we run safe, without slowing teams down. And do it with Sam and the dev teams, not for them."
 
-**The company**
+Marta (Platform) and Sam (Security) go through the post-mortem one row at a time. Each failure gets a decision, and each decision follows a principle from Part 1.
 
-- 1,000+ developers in 100+ teams, all on GitHub Enterprise (GHE).
-- A platform team that runs GHE as a self-service product. Developers are its customers, and it balances security with speed of delivery.
-- Not a fully regulated industry, but security and governance are priorities, and code has leaked through CI/CD before.
-- Use Azure Cloud for infrastructure and services.
+| What went wrong | What was missing | What Contoso decided | Principle |
+|---|---|---|---|
+| A moved tag delivered malicious code | An allowlist and SHA pinning | Only allowlisted actions run, pinned to a full SHA. Existing workflows get migrated with pinact. | [Only run what you've approved](#only-run-what-youve-approved-at-exact-shas), [Pin everything](#pin-everything-to-a-full-commit-sha) |
+| Nobody had ever looked at the action | A review before approval | GitHub, Microsoft and Azure are trusted publishers, allowed per repository. Everyone else gets in one reviewed SHA at a time, tested in the **Review GHE**: a separate GHE Cloud instance, isolated from the one where teams work, that keeps a copy of every approved SHA. | [Review the code](#review-the-code-that-actually-runs) |
+| The job held secrets it didn't need | Least privilege, and no secrets near third-party code | Tokens are read-only by default, and actions can't create or approve pull requests. | [Short leash](#keep-tokens-and-secrets-on-a-short-leash) |
+| One token could write to every repository, one secret could reach Azure | Short-lived, scoped tokens and OIDC | Bots use GitHub Apps with short-lived tokens instead of personal access tokens. Azure deployments use OIDC instead of client secrets. | [Short leash](#keep-tokens-and-secrets-on-a-short-leash) |
+| Nothing limited where the payload could send data | Egress-controlled runners | Runners are ephemeral. Self-hosted runners get egress rules. Sensitive data goes to GitHub-hosted runners only when there's no other way. | [Lock down the runner](#lock-down-the-runner) |
+| Four days to find every usage | An inventory with owners | Every action gets a catalog entry and a sponsor team, and the inventory refreshes daily. | [Know what you run](#know-what-you-run-and-who-owns-it) |
+| The first alert came a day late | Continuous monitoring | The audit log streams to Microsoft Sentinel, with automated detections ([GHESentinelAutomation](https://github.com/rmoreirao/GHESentinelAutomation)). | [Keep watching](#keep-watching) |
+| Teams added any action they liked | A fast, approved route | The platform team runs a self-service process with published turnaround times. Once an action is in, its lifecycle is shared with the sponsor team. | [Secure path, fastest path](#make-the-secure-path-the-fastest-path) |
+| Four teams each held part of the answer | One process with owners | One process, end to end. Security and dev teams have a named role in every step, and everyone shares one channel for third-party actions. | [The cast](#chapter-2-the-cast-and-the-map-roles-responsibilities-and-the-end-to-end-process) |
+| A day to block, weeks to rotate | A rehearsed response plan | A written runbook that blocks an action in minutes, rehearsed with drills. | [Be ready](#be-ready-for-the-day-an-action-goes-bad) |
 
-**Already in place**
-
-- Automation manages the GHE setup.
-- Two GHE Cloud instances: the **Dev GHE**, where teams work, and the **Review GHE**, an isolated instance for testing third-party code.
-- GitHub Advanced Security, with CodeQL, secret scanning and Dependabot.
-
-**Decided after the incident**
-
-- Only allowlisted actions run, pinned to a full SHA. Existing workflows get migrated with pinact.
-- GitHub, Microsoft and Azure are trusted publishers, allowed per repository. Everyone else gets in one reviewed SHA at a time.
-- Tokens are read-only by default, and actions can't create or approve pull requests.
-- Bots use GitHub Apps with short-lived tokens instead of personal access tokens. Azure deployments use OIDC instead of client secrets.
-- Runners are ephemeral. Self-hosted runners get egress rules. Sensitive data goes to GitHub-hosted runners only when there's no other way.
-- The audit log streams to Microsoft Sentinel, with automated detections ([GHESentinelAutomation](https://github.com/rmoreirao/GHESentinelAutomation)).
-- Workflows use the vetted upstream. The Review GHE keeps a copy of every approved SHA.
-- The platform team runs the process. Once an action is in, its lifecycle is shared with the sponsor team.
-- One process, end to end. Security and dev teams have a named role in every step, and everyone shares one channel for third-party actions.
+One principle has no row: [let every approval expire](#let-every-approval-expire). The incident didn't call for it, but an approved SHA doesn't stay safe forever. [Chapter 8](#chapter-8-versions-come-and-go-step-5--lifecycle-management) shows why.
 
 ### Chapter 2: The cast and the map (Roles, Responsibilities and the End-to-End Process)
 
