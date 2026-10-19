@@ -187,8 +187,8 @@ Search the catalog → Request what's missing → Get a decision → Copy the sn
 | **Security** | Watches what runs; joins risky requests and incidents |
 | **Infra team** | Runs the runners and owns their egress rules |
 
-- Publish turnaround times and automate checks that don't need a human.
-- Link every policy failure to the catalog and the request form.
+- **Publish turnaround times:** 1–2 business days for trusted publishers, 3–5 for everyone else.
+- Automate checks that don't need a human. Link every policy failure to the catalog and the request form.
 
 <div class="takeaway">If the approved route is slower than a workaround, people take the workaround.</div>
 
@@ -197,6 +197,53 @@ Time: 1:45. Elapsed: 5:00.
 Principle 1 underpins all three groups on the next slides.
 The requesting dev team is the sponsor: it shares responsibility for review, testing and keeping the action current. Other consuming teams must use it within its limits and migrate on time.
 This is a self-service product, not a security ticket queue. A portal, GitHub issue forms or an existing ITSM tool can provide the front door.
+The two turnaround times come from two onboarding routes. The next slide explains them.
+-->
+
+---
+
+<style scoped>
+.route code { white-space: nowrap; }
+</style>
+
+<p class="section-label">Part 1 · Principles · Approve what runs</p>
+
+# Two doors: trusted publishers and everyone else
+
+<div class="cols">
+<div class="route">
+
+### Trusted publishers
+
+- A **short list you choose**: organizations, never individuals.
+- Allow the repository: `owner/repo@*`
+- **Fast track:** 1–2 business days.
+- **The price:** future SHAs run without review.
+
+</div>
+<div class="route">
+
+### Everyone else
+
+- Any other publisher, verified badge or not.
+- Allow one SHA: `owner/repo@<full-sha>`
+- **Full review:** 3–5 business days.
+- **Every new version** goes back through review.
+
+</div>
+</div>
+
+<div class="takeaway">Trust a few publishers for speed. Balance it with pinning, daily monitoring and a fast block.</div>
+
+<!--
+Time: 1:00. Elapsed: 6:00.
+This is the one deliberate exception to principle 2. It's what makes the fast path possible for the actions teams use most.
+Allowing owner/repo@* saves review work and allowlist entries, but it lets in future SHAs nobody reviewed. Accept that only for a short list of organizations.
+Pick the publishers you already depend on most. Good criteria: a verified identity, a security policy, enforced 2FA, and protected tags or immutable releases. Review the list twice a year.
+Allow trusted publishers per repository, not with owner/*, which trusts repositories that don't exist yet. The "Allow actions created by GitHub" checkbox also covers archived repositories.
+A Marketplace verified-creator badge tells you who published an action, not that it's safe. It isn't a reason to trust a publisher.
+Trusted doesn't mean unwatched: SHA pinning still applies, daily monitoring covers these repositories too, and one deny entry blocks a bad SHA or the whole repository.
+In Part 2, the Infra team's azure/login request takes the fast track and Fabrikam's action gets the full review.
 -->
 
 ---
@@ -212,7 +259,7 @@ This is a self-service product, not a security ticket queue. A portal, GitHub is
 
 Enforce an allowlist generated from the catalog.
 
-Trusted publishers are the one deliberate exception.
+Exact SHAs, except for your trusted publishers.
 
 </div>
 <div>
@@ -238,9 +285,9 @@ Check images and downloads too.
 <div class="takeaway">Pinning fixes the reference. Review evaluates the code. Neither replaces the other.</div>
 
 <!--
-Time: 2:30. Elapsed: 7:30.
+Time: 1:30. Elapsed: 7:30.
 An exact-SHA allowlist entry authorizes one reviewed revision; the pinning setting requires workflows to name a full SHA. They are separate controls.
-Trusted publishers are a short list you choose, allowed per repository with owner/repo@*. Future SHAs from those repositories enter without individual review. Keep pinning, monitoring and a fast block. A verified Marketplace badge is not an approval.
+Trusted publishers were covered on the previous slide; don't repeat the trade-off here.
 Review the exact SHA in isolation, including action.yml, dist/, pre/post hooks, nested actions, images and runtime downloads. Use GHAS, the Advisory Database, Scorecard and zizmor. AI advice is not an approval.
 Default minimum ages: repository 2 months, SHA 7 days. Security fixes skip the wait, never the review.
 Full allowlist syntax is in backup.
