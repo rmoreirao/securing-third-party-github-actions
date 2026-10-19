@@ -7,3 +7,7 @@ _site/
 docs/slides/index.html
 docs/slides/deck.pdf
 docs/slides/deck.pptx
+
+# Alternative deck, built by `npm run slides:two-parts`
+docs/slides/principles-then-practice.html
+docs/slides/principles-then-practice.pdf

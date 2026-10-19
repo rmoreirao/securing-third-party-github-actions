@@ -12,7 +12,7 @@ description: An opinionated guide for platform teams and developers on securely 
 *An opinionated guide for platform teams and developers.*
 
 {: .note }
-The views in this guide are my own and aren't official Microsoft guidance. Contoso and Fabrikam are fictional. GitHub settings and limits change often, so check the linked docs before you rely on them. Prefer a summary? See the [30-minute slides](slides/) ([PDF](slides/deck.pdf)).
+The views in this guide are my own and aren't official Microsoft guidance. Contoso and Fabrikam are fictional. GitHub settings and limits change often, so check the linked docs before you rely on them. Prefer a summary? See the [30-minute slides](slides/principles-then-practice.html) ([PDF](slides/principles-then-practice.pdf)).
 
 <details markdown="block">
   <summary>Table of contents</summary>
@@ -819,6 +819,6 @@ Short-lived credentials limit exposure time, not access. OIDC doesn't make an ov
 
 **Slides**
 
-- [Securing third-party GitHub Actions](slides/): a 30-minute summary of this guide ([PDF](slides/deck.pdf))
+- [Securing third-party GitHub Actions](slides/principles-then-practice.html): a 30-minute summary of this guide ([PDF](slides/principles-then-practice.pdf))
 
 <!-- {% endraw %} -->

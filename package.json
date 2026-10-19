@@ -8,7 +8,8 @@
     "slides:html": "marp docs/slides/deck.md --html -o docs/slides/index.html",
     "slides:pdf": "marp docs/slides/deck.md --html --pdf --allow-local-files -o docs/slides/deck.pdf",
     "slides:pptx": "marp docs/slides/deck.md --html --pptx --allow-local-files -o docs/slides/deck.pptx",
-    "slides:watch": "marp docs/slides/deck.md --html --watch --preview"
+    "slides:watch": "marp docs/slides/deck.md --html --watch --preview",
+    "slides:two-parts": "marp docs/slides/principles-then-practice.md --html -o docs/slides/principles-then-practice.html && marp docs/slides/principles-then-practice.md --html --pdf --allow-local-files -o docs/slides/principles-then-practice.pdf"
   },
   "devDependencies": {
     "@marp-team/marp-cli": "4.5.1"

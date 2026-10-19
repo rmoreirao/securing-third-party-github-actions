@@ -2,14 +2,15 @@
 
 An opinionated guide for platform teams and developers on how to securely onboard, adopt and monitor third-party GitHub Actions, without slowing anyone down.
 
-**[Read the guide](https://rmoreirao.github.io/securing-third-party-github-actions/)** · **[Slides](https://rmoreirao.github.io/securing-third-party-github-actions/slides/)** · **[Slides (PDF)](https://rmoreirao.github.io/securing-third-party-github-actions/slides/deck.pdf)**
+**[Read the guide](https://rmoreirao.github.io/securing-third-party-github-actions/)** · **[Slides](https://rmoreirao.github.io/securing-third-party-github-actions/slides/principles-then-practice.html)** · **[Slides (PDF)](https://rmoreirao.github.io/securing-third-party-github-actions/slides/principles-then-practice.pdf)**
 
 ## What's inside
 
 - **Part 1: Principles and best practices.** Ten principles and a settings checklist that work for any organization.
 - **Part 2: How Contoso secured its third-party actions.** A fictional story, built from real incidents, that walks through every step: bootstrap, request, onboarding, adoption, monitoring, lifecycle, compromise response and break-glass.
 - **Extras.** An onboarding checklist, a request form, a catalog entry example and further reading.
-- **Slides.** A 30-minute summary for presenting the guide: the incident and Contoso's post-mortem, the principles, what changes in a workflow, the lifecycle and who owns each step, and the settings checklist. Backup slides cover egress, the catalog and mirroring for Q&A.
+- **Slides: principles, then practice.** A 30-minute deck in two clear parts: the ten principles first, then Contoso applying them through steps 0–7. It has 27 minutes of timed speaker notes, 3 minutes for questions and reference slides after the close. This is the deck the site and this README link to.
+- **Original slides.** The earlier 30-minute deck, which mixes the incident, principles, lifecycle and settings checklist. It's still built and published at [`/slides/`](https://rmoreirao.github.io/securing-third-party-github-actions/slides/) ([PDF](https://rmoreirao.github.io/securing-third-party-github-actions/slides/deck.pdf)), but nothing links to it.
 
 ## This repository follows the guide
 
@@ -28,7 +29,8 @@ One known gap: `actions/jekyll-build-pages` runs a container image referenced by
 | Path | What it is |
 |---|---|
 | [`docs/index.md`](docs/index.md) | The guide, published with GitHub Pages and the [Just the Docs](https://github.com/just-the-docs/just-the-docs) theme |
-| [`docs/slides/deck.md`](docs/slides/deck.md) | The slides, written in [Marp](https://marp.app/) Markdown, with speaker notes |
+| [`docs/slides/principles-then-practice.md`](docs/slides/principles-then-practice.md) | The linked slides, written in [Marp](https://marp.app/) Markdown: principles first, then Contoso's application, with timed speaker notes |
+| [`docs/slides/deck.md`](docs/slides/deck.md) | The original deck, still built and published at `/slides/` |
 | [`docs/assets/`](docs/assets/) | The lifecycle diagram |
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Builds the slides and the site, then deploys to GitHub Pages on every push to `main` |
 
@@ -47,9 +49,12 @@ npm ci --ignore-scripts
 npm run slides        # docs/slides/index.html and docs/slides/deck.pdf
 npm run slides:pptx   # PowerPoint export (each slide as an image)
 npm run slides:watch  # live preview while you edit
+npm run slides:two-parts  # separate principles-then-practice.html and .pdf
 ```
 
-**The site** builds with the same container the workflow uses. Build the slides first so they're included:
+The alternative build doesn't overwrite the original deck or its HTML/PDF. Both decks are built in CI and published under `/slides/`; generated files stay gitignored.
+
+**The site** builds with the same container the workflow uses. Build both decks first so they're included:
 
 ```shell
 docker run --rm -v "${PWD}:/github/workspace" \

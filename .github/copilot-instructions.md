@@ -28,7 +28,8 @@ npm run slides:watch      # live preview
   - **Part 1**: TL;DR, ten principles (h4 headings), "Upstream, mirror or wrapper?", settings checklist.
   - **Part 2**: the Contoso story. Prologue, Chapters 1–10, Epilogue. Chapters 3–10 map to lifecycle steps 0–7, with sub-steps 2a/2b and 5a/5b/5c.
   - **Extras**: onboarding checklist (Critical/High/Medium/Low), request form, catalog entry example, further reading.
-- [docs/slides/deck.md](../docs/slides/deck.md): the Marp deck. It's excluded from Jekyll (`exclude:` in `docs/_config.yml`); its built HTML/PDF are published at `/slides/`. It references the diagram as `../assets/...`.
+- [docs/slides/principles-then-practice.md](../docs/slides/principles-then-practice.md): the deck the site nav, guide and README link to. Built with `npm run slides:two-parts` to `principles-then-practice.html` and `.pdf` under `/slides/`.
+- [docs/slides/deck.md](../docs/slides/deck.md): the original Marp deck, still built and published at `/slides/` but no longer linked. Both decks are excluded from Jekyll (`exclude:` in `docs/_config.yml`) and reference the diagram as `../assets/...`.
 - [docs/assets/third-party-actions-lifecycle.svg](../docs/assets/third-party-actions-lifecycle.svg): hand-written SVG with plain `<text>` labels plus `<title>`/`<desc>`, used by both the guide and the deck.
 - [.github/workflows/pages.yml](workflows/pages.yml): on push to `main`, builds the slides, then the site with `actions/jekyll-build-pages`, then deploys to Pages.
 - Theme: `just-the-docs` via `remote_theme`, pinned to a commit SHA in `docs/_config.yml`. Overrides live in `docs/_sass/custom/` (`setup.scss` for `$nav-width`, `custom.scss` for the centered reading column, table sizing and h4 principle headings). Footer text is in `docs/_includes/footer_custom.html`.

@@ -21,11 +21,11 @@ aux_links_new_tab: true
 
 nav_external_links:
   - title: Slides
-    url: /slides/
+    url: /slides/principles-then-practice.html
     hide_icon: true
     opens_in_new_tab: false
   - title: Slides (PDF)
-    url: /slides/deck.pdf
+    url: /slides/principles-then-practice.pdf
     hide_icon: true
     opens_in_new_tab: false
 
@@ -36,3 +36,4 @@ callouts:
 
 exclude:
   - slides/deck.md
+  - slides/principles-then-practice.md

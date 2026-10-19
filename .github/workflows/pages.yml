@@ -31,7 +31,9 @@ jobs:
       - name: Build slides
         env:
           CHROME_NO_SANDBOX: "1"
-        run: npm run slides
+        run: |
+          npm run slides
+          npm run slides:two-parts
 
       - name: Build site
         uses: actions/jekyll-build-pages@44a6e6beabd48582f863aeeb6cb2151cc1716697 # v1.0.13
