@@ -44,6 +44,7 @@ Every `uses:` line in a workflow runs someone else's code next to your source co
 - **Be ready for the day an action goes bad.** Block in minutes, rotate everything, rehearse.
 
 **Who owns what:** the platform team runs the process and the tooling. The dev team that asked for an action sponsors it, and shares the job of keeping it safe and up to date. The security team watches what runs, and joins on risky requests and incidents. The Infra team runs the runners and owns their egress rules. None of them can do it alone.
+
 ### What this covers (and what it doesn't)
 
 This guide is about **third-party actions**: any `uses: owner/repo@ref` that lives outside your enterprise. That includes GitHub's own `actions/*`, Microsoft and Azure actions, everything on the Marketplace, and whatever those actions pull in when they run: nested actions, container images and downloaded tools.

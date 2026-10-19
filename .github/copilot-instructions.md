@@ -38,11 +38,11 @@ npm run slides:watch      # live preview
 The same facts appear in several places. When one changes, grep for the others and update them too. After guide changes, check whether the deck needs updating.
 
 - **Principles**: the TL;DR list, the h4 sections under "The principles", and the deck's "The principles (1/2)" and "(2/2)".
-- **Team roles** (platform, security, Infra, dev teams as sponsor and consumers): the "Who owns what" paragraph, the Chapter 2 "cast" and "Who does what" tables, the Part 2 "process at a glance" table, and the deck's "Four teams, one process" slide and principles (2/2) takeaway.
+- **Team roles** (platform, security, Infra, dev teams as sponsor and consumers): the "Who owns what" paragraph, the Chapter 2 "cast" and "Who does what" tables, the Part 2 "process at a glance" table, and the deck's "Four teams, one process" slide and its takeaway.
 - **Settings checklist**: the guide's "Settings checklist" and the deck's "Settings checklist (1/2)" and "(2/2)", item for item.
-- **Numbers** (onboarding days, minimum ages, expiry windows, break-glass limits, the 1,000-entry allowlist limit and 800 warning): the Chapter 2 "The numbers" table, the chapter text, the deck (principle 9, allowlist slide, speaker notes) and the SVG labels.
+- **Numbers** (onboarding days, minimum ages, expiry windows, break-glass limits, the 1,000-entry allowlist limit and 800 warning): the Chapter 2 "The numbers" table, the chapter text, the deck (principle 9, the lifecycle, workflow and allowlist slides, speaker notes) and the SVG labels.
 - **Step names and numbers 0–7**: the "process at a glance" table, chapter headings, the SVG `<text>` and `<desc>`, and the deck's lifecycle slide.
-- **Story outcomes** (29 minutes to block, 250+ credentials rotated, 64 repositories in the drill, …): chapters, the Chapter 9 and Epilogue tables, and deck speaker notes.
+- **Story outcomes** (29 minutes to block, 250+ credentials rotated, 64 repositories in the drill, …): chapters, the Prologue and Chapter 1, the Chapter 9 and Epilogue tables, the deck's "Contoso gets hit" and "Contoso's post-mortem" slides, and deck speaker notes.
 - **README.md**: "What's inside" describes the guide and slides; "This repository follows the guide" describes `pages.yml`.
 
 ## Conventions
@@ -68,9 +68,10 @@ The same facts appear in several places. When one changes, grep for the others a
 ### Slides (Marp)
 
 - Slides are separated by `---`. Per-slide directives: `<!-- _class: lead -->` for title slides, `<!-- _class: dense -->` for smaller text and tables.
-- Reusable styles are defined in the deck's front-matter `style:`: `.takeaway` (closing one-liner box), `.cols` (two-column grid), `ul.check` (checkbox lists written as raw `<ul class="check"><li>` HTML). Use `<style scoped>` for one-off tweaks.
+- Reusable styles are defined in the deck's front-matter `style:`: `.takeaway` (closing one-liner box), `.cols` (two-column grid), `.stats` (grid of big-number boxes), `ul.check` (checkbox lists written as raw `<ul class="check"><li>` HTML). Use `<style scoped>` for one-off tweaks.
 - Speaker notes go in a trailing `<!-- … -->` comment on each slide.
 - Slides are 16:9 (1280×720). Keep the deck to a 30-minute talk.
+- Order: why (hook, real incident, Contoso's impact and post-mortem), what (principles, workflow before/after), how (lifecycle, teams, allowlist, detection), then the checklist and where to start. Backup slides for Q&A go after the closing slide, titled `Backup: …`.
 
 ### The repository follows its own guide
 

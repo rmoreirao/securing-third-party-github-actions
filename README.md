@@ -9,7 +9,7 @@ An opinionated guide for platform teams and developers on how to securely onboar
 - **Part 1: Principles and best practices.** Ten principles and a settings checklist that work for any organization.
 - **Part 2: How Contoso secured its third-party actions.** A fictional story, built from real incidents, that walks through every step: bootstrap, request, onboarding, adoption, monitoring, lifecycle, compromise response and break-glass.
 - **Extras.** An onboarding checklist, a request form, a catalog entry example and further reading.
-- **Slides.** A 30-minute summary for presenting the guide: the incident, the principles and the settings checklist.
+- **Slides.** A 30-minute summary for presenting the guide: the incident and Contoso's post-mortem, the principles, what changes in a workflow, the lifecycle and who owns each step, and the settings checklist. Backup slides cover egress, the catalog and mirroring for Q&A.
 
 ## This repository follows the guide
 
