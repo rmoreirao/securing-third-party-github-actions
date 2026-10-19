@@ -126,21 +126,21 @@ The bot could bypass branch protection, so a postinstall script in a shared npm 
 
 # Contoso's post-mortem
 
-| What went wrong | What was missing | Principle |
-|---|---|---|
-| A moved tag delivered malicious code | An allowlist and SHA pinning | 2, 3 |
-| Nobody had ever looked at the action | A review before approval | 4 |
-| The job held secrets it didn't need | Least privilege, and no secrets near third-party code | 5 |
-| One token could write to every repository, one secret could reach Azure | Short-lived, scoped tokens and OIDC | 5 |
-| Nothing limited where the payload could send data | Egress-controlled runners | 6 |
-| Four days to find every usage | An inventory with owners | 7 |
-| The first alert came a day late | Continuous monitoring | 8 |
-| Teams added any action they liked | A fast, approved route | 1 |
-| A day to block, weeks to rotate | A rehearsed response plan | 10 |
-| Four teams each held part of the answer | One process with owners | Four teams |
+| What went wrong | What was missing |
+|---|---|
+| A moved tag delivered malicious code | An allowlist and SHA pinning |
+| Nobody had ever looked at the action | A review before approval |
+| The job held secrets it didn't need | Least privilege, and no secrets near third-party code |
+| One token could write to every repository, one secret could reach Azure | Short-lived, scoped tokens and OIDC |
+| Nothing limited where the payload could send data | Egress-controlled runners |
+| Four days to find every usage | An inventory with owners |
+| The first alert came a day late | Continuous monitoring |
+| Teams added any action they liked | A fast, approved route |
+| A day to block, weeks to rotate | A rehearsed response plan |
+| Four teams each held part of the answer | One process with owners |
 
 <!--
-Each row maps to one of the ten principles on the next two slides. Principle 9, "let every approval expire", has no row: the incident didn't call for it, but an approved SHA doesn't stay safe forever.
+The next two slides turn these gaps into ten principles. Principle 9, "let every approval expire", isn't here: the incident didn't call for it, but an approved SHA doesn't stay safe forever.
 Why it took so long: four teams each held part of the answer, and none of them knew it. No audit log streaming, so the clones were spotted a day late. Nobody owned the Actions policy: three hours to find out who could change it, a day to block. No inventory: four days to find every usage. The Infra team heard on day 3; the persistence in Entra ID turned up in week 3.
 -->
 
