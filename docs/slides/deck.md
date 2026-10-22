@@ -51,6 +51,7 @@ style: |
 
 Onboard, adopt and monitor them without slowing teams down
 
+**Rodrigo Moreirao**<br>
 **Cloud Solution Architect · Microsoft**
 <span style="font-size:18px;color:#656d76">Personal views, not official Microsoft guidance</span>
 
