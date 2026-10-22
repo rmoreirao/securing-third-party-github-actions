@@ -148,7 +148,7 @@ Why it took so long: four teams each held part of the answer, and none of them k
 
 # The principles (1/2)
 
-1. **Make the secure path the fastest path.** Self-service requests, a catalog of approved actions and published turnaround times.
+1. **Make the secure path the fastest path.** Let teams find approved actions in a catalog and request new actions or updates. Show how long approval takes.
 2. **Only run what you've approved, at exact SHAs.** An enforced allowlist. Trusted publishers, a short list you choose, are the one deliberate exception.
 3. **Pin everything to a full commit SHA.** `uses: owner/repo@<40-char-sha> # v2.4.1`, enforced by policy.
 4. **Review the code that actually runs.** `action.yml`, `dist/`, `pre` and `post` hooks, nested actions, images and downloads. Not the README.

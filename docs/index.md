@@ -32,7 +32,7 @@ Every `uses:` line in a workflow runs someone else's code next to your source co
 
 ### TL;DR
 
-- **Make the secure path the fastest path.** Self-service requests, a catalog and published turnaround times for onboarding / updating third-party actions.
+- **Make the secure path the fastest path.** Let teams find approved actions in a catalog and request new actions or updates. Show how long approval takes.
 - **Only run what you've approved, at exact SHAs.** Trusted publishers are the one deliberate exception.
 - **Pin everything to a full commit SHA.** Tags move. Commits don't.
 - **Review the code that actually runs**, not the README.

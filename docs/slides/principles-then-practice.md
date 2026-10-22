@@ -405,14 +405,57 @@ th, td { padding: 6px 12px; }
 <div class="takeaway">You need evidence and owners before the incident, not after it.</div>
 
 <!--
-Time: 2:30. Elapsed: 12:00.
-These are the remaining four principles. Part 1 is now complete.
+Time: 2:00. Elapsed: 11:30.
+These are the remaining four principles. Recap all ten on the next slide before moving to Part 2.
 Distinguish the catalog (what is approved), the inventory (what workflows declare), and run evidence (what executed, with which access).
 Dependabot doesn't raise alerts for SHA-pinned actions. Replace that safety net with daily checks: advisories for every live action, Dependabot on reviewed copies, and moved tags. Detections run on what actually ran.
 Defaults: an old SHA expires 3 months after a newer version is approved, 30 days after a High finding, the same day for Critical; compromise is blocked immediately. Warn and open migration PRs.
 Keep audit logs for the incident look-back window. Rehearse a tabletop twice a year and a technical drill quarterly.
 Point at the green box, don't read it. The full settings checklist is in the appendix.
-Transition: the framework is complete. From here, follow Contoso chronologically; don't repeat the principles as another checklist.
+Transition: the framework is complete. Give the audience one summary to take into the Contoso story.
+-->
+
+---
+
+<style scoped>
+.route { margin-top: 0; }
+ol { margin: 0; padding-left: 1.4em; }
+li { margin-bottom: 16px; }
+li:last-child { margin-bottom: 0; }
+li::marker { color: #0b5cad; font-weight: 700; }
+</style>
+
+<p class="section-label">Part 1 · Principles · Recap</p>
+
+# TL;DR: the ten principles
+
+<div class="cols">
+<div class="route">
+
+1. **Make the secure path the fastest path.**
+2. **Only run what you've approved, at exact SHAs.**
+3. **Pin everything to a full commit SHA.**
+4. **Review the code that actually runs.**
+5. **Keep tokens and secrets on a short leash.**
+
+</div>
+<div class="route">
+
+6. **Lock down the runner, with the team that runs it.**
+7. **Know what you run, and who owns it.**
+8. **Keep watching**, trusted publishers included.
+9. **Let every approval expire.**
+10. **Be ready for the day an action goes bad.**
+
+</div>
+</div>
+
+<div class="takeaway">Approve what runs → Limit its access → Keep managing it</div>
+
+<!--
+Time: 0:30. Elapsed: 12:00.
+Recap the ten principles in the guide's order. Keep this to a quick scan, not another explanation of each control.
+Transition: now follow Contoso chronologically and see where each principle changes a decision.
 -->
 
 ---
