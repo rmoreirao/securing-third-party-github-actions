@@ -31,7 +31,7 @@ One known gap: `actions/jekyll-build-pages` runs a container image referenced by
 | [`docs/index.md`](docs/index.md) | The guide, published with GitHub Pages and the [Just the Docs](https://github.com/just-the-docs/just-the-docs) theme |
 | [`docs/slides/principles-then-practice.md`](docs/slides/principles-then-practice.md) | The linked slides, written in [Marp](https://marp.app/) Markdown: principles first, then Contoso's application, with timed speaker notes |
 | [`docs/slides/deck.md`](docs/slides/deck.md) | The original deck, still built and published at `/slides/` |
-| [`docs/assets/`](docs/assets/) | The lifecycle diagram |
+| [`docs/assets/`](docs/assets/) | The lifecycle diagram shared by the guide and slides |
 | [`.github/workflows/pages.yml`](.github/workflows/pages.yml) | Builds the slides and the site, then deploys to GitHub Pages on every push to `main` |
 
 ### Site layout

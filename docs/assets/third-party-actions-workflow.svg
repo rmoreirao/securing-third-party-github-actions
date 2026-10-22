@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1152" height="464" viewBox="0 0 1152 464" role="img" aria-labelledby="title description">
+<title id="title">The third-party GitHub Actions lifecycle, adapted for slides</title>
+<desc id="description">Steps 0 to 7 match the guide. Bootstrap leads to a request, then onboarding splits into trusted-publisher fast track (2a) and isolated full review (2b). Both lanes merge into approval and publication, then adoption and monitoring. Monitoring feeds lifecycle management: daily vulnerability checks (5b), version updates (5a) returning to request and review, and deprecation and removal (5c). A credible compromise signal triggers response (6). Break-glass (7) is a temporary exception connected to adoption, with two approvers and a maximum of 7 days. Platform owns the process, dev teams sponsor and adopt, and Security and the Infra team join response.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="context-stroke"/></marker>
+</defs>
+<style>
+text { font-family: "Segoe UI", Arial, sans-serif; fill: #1f2328; text-anchor: middle; }
+.label { font-size: 20px; font-weight: 700; }
+.body { font-size: 17px; }
+.owner { font-size: 16px; fill: #424a53; }
+.group { text-anchor: start; }
+.link { fill: none; stroke-width: 2; stroke-linejoin: round; marker-end: url(#arrow); }
+</style>
+<rect width="1152" height="464" fill="#ffffff"/>
+
+<rect x="388" y="2" width="284" height="246" rx="16" fill="none" stroke="#868e96" stroke-width="1.5"/>
+<text x="404" y="27" class="label group">2 · Onboarding</text>
+<text x="530" y="237" class="owner">Platform + sponsor</text>
+<rect x="12" y="268" width="660" height="188" rx="16" fill="none" stroke="#868e96" stroke-width="1.5"/>
+<text x="28" y="294" class="label group">5 · Lifecycle management</text>
+<text x="654" y="294" class="owner" style="text-anchor:end">Platform + dev teams</text>
+
+<path d="M 176 124 H 198" class="link" stroke="#1864ab"/>
+<path d="M 364 124 H 380 V 80 H 402" class="link" stroke="#862e9c"/>
+<path d="M 380 124 V 175 H 402" class="link" stroke="#862e9c"/>
+<path d="M 656 80 H 684 V 124 H 694" class="link" stroke="#862e9c"/>
+<path d="M 656 175 H 684 V 124" fill="none" stroke="#862e9c" stroke-width="2" stroke-linejoin="round"/>
+<path d="M 880 124 H 926" class="link" stroke="#0c8599"/>
+<path d="M 1032 172 V 230" class="link" stroke="#0c8599"/>
+<path d="M 928 284 H 916 V 332 H 680 V 312 H 346 V 322" class="link" stroke="#0c8599"/>
+<path d="M 228 368 H 214" class="link" stroke="#e67700"/>
+<path d="M 120 412 V 436 H 568 V 414" class="link" stroke="#495057"/>
+<text x="346" y="431" class="owner">Retire the old SHA</text>
+<path d="M 28 368 H 2 V 12 H 282 V 66" class="link" stroke="#1864ab" stroke-dasharray="7 5"/>
+<text x="16" y="37" class="body group" style="fill:#1864ab">Every new SHA returns to review</text>
+<path d="M 1032 344 V 400 H 906" class="link" stroke="#c92a2a"/>
+<text x="1032" y="426" class="body" style="fill:#c92a2a">Credible signal</text>
+<path d="M 904 226 H 916 V 152 H 926" class="link" stroke="#e67700" stroke-dasharray="7 5"/>
+
+<rect x="12" y="68" width="164" height="112" rx="12" fill="#e7f5ff" stroke="#1864ab" stroke-width="2"/>
+<text x="94" y="95" class="label">0 · Bootstrap</text>
+<text x="94" y="119" class="body">Inventory, catalog</text>
+<text x="94" y="141" class="body">SHA pins</text>
+<text x="94" y="165" class="owner">Platform</text>
+<rect x="200" y="68" width="164" height="112" rx="12" fill="#e7f5ff" stroke="#1864ab" stroke-width="2"/>
+<text x="282" y="95" class="label">1 · Request</text>
+<text x="282" y="119" class="body">Need, owner, access</text>
+<text x="282" y="151" class="owner">Dev team (sponsor)</text>
+
+<rect x="404" y="42" width="252" height="76" rx="12" fill="#f3d9fa" stroke="#862e9c" stroke-width="2"/>
+<text x="530" y="71" class="label">2a · Trusted publisher</text>
+<text x="530" y="98" class="body" style="font-size:16px">Fast track · 1–2 business days</text>
+<rect x="404" y="134" width="252" height="82" rx="12" fill="#f3d9fa" stroke="#862e9c" stroke-width="2"/>
+<text x="530" y="160" class="label">2b · Untrusted publisher</text>
+<text x="530" y="184" class="body" style="font-size:16px">Isolated copy + full review</text>
+<text x="530" y="205" class="body" style="font-size:16px">3–5 business days</text>
+
+<rect x="696" y="68" width="184" height="104" rx="12" fill="#e3fafc" stroke="#0c8599" stroke-width="2"/>
+<text x="788" y="95" class="label" style="font-size:19px">Approve + publish</text>
+<text x="788" y="121" class="body">Catalog + allowlist</text>
+<text x="788" y="151" class="owner">Sponsor assigned</text>
+<rect x="928" y="68" width="208" height="104" rx="12" fill="#e3fafc" stroke="#0c8599" stroke-width="2"/>
+<text x="1032" y="95" class="label">3 · Adoption</text>
+<text x="1032" y="121" class="body">Use approved SHAs</text>
+<text x="1032" y="151" class="owner">Dev teams</text>
+<rect x="928" y="232" width="208" height="112" rx="12" fill="#e3fafc" stroke="#0c8599" stroke-width="2"/>
+<text x="1032" y="258" class="label">4 · Monitoring</text>
+<text x="1032" y="282" class="body">Inventory, run evidence</text>
+<text x="1032" y="304" class="body">SIEM alerts</text>
+<text x="1032" y="329" class="owner">Platform + Security</text>
+
+<rect x="28" y="324" width="184" height="88" rx="12" fill="#e7f5ff" stroke="#1864ab" stroke-width="2"/>
+<text x="120" y="354" class="label">5a · Updates</text>
+<text x="120" y="384" class="body">New SHA, new review</text>
+<rect x="228" y="324" width="236" height="88" rx="12" fill="#fff3bf" stroke="#e67700" stroke-width="2"/>
+<text x="346" y="354" class="label">5b · Vulnerabilities</text>
+<text x="346" y="384" class="body">Daily checks, every SHA</text>
+<rect x="480" y="324" width="176" height="88" rx="12" fill="#f1f3f5" stroke="#495057" stroke-width="2"/>
+<text x="568" y="348" class="label" style="font-size:19px">5c · Deprecation</text>
+<text x="568" y="371" class="label" style="font-size:19px">+ removal</text>
+<text x="568" y="397" class="body" style="font-size:16px">Warn, PRs, expire</text>
+
+<rect x="696" y="348" width="208" height="108" rx="12" fill="#fff5f5" stroke="#c92a2a" stroke-width="2"/>
+<text x="800" y="373" class="label">6 · Compromise</text>
+<text x="800" y="396" class="label">response</text>
+<text x="800" y="419" class="body" style="font-size:15px">Block, scope, rotate, recover</text>
+<text x="800" y="442" class="owner">Platform + Security + Infra</text>
+<rect x="696" y="196" width="208" height="124" rx="12" fill="#fff3bf" stroke="#e67700" stroke-width="2" stroke-dasharray="7 5"/>
+<text x="800" y="222" class="label">7 · Break-glass</text>
+<text x="800" y="246" class="body">Temporary SHA</text>
+<text x="800" y="268" class="body">Two approvers</text>
+<text x="800" y="290" class="body">7 days at most</text>
+<text x="800" y="310" class="owner">Platform + Security</text>
+</svg>

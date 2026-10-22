@@ -58,15 +58,6 @@ style: |
   .applied b, .chips b, .principle { color: #0b5cad; }
   .chips { display: flex; flex-wrap: wrap; gap: 10px 18px; margin-top: 14px; font-size: 19px; }
   .chips span { background: #eef5fc; border-radius: 6px; padding: 6px 12px; }
-  .flow { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; margin-top: 6px; }
-  .flow > div { position: relative; background: #eef5fc; border-radius: 6px; padding: 12px; font-size: 17px; line-height: 1.3; }
-  .flow > div:not(:last-child)::after { content: "→"; position: absolute; right: -21px; top: 38%; color: #0b5cad; font-weight: 700; font-size: 20px; }
-  .flow b, .branches b { display: block; color: #0b5cad; font-size: 19px; margin-bottom: 4px; }
-  .who { display: block; margin-top: 8px; font-size: 14px; font-weight: 600; color: #656d76; }
-  .loop { text-align: right; margin: 8px 0 0; font-size: 16px; color: #656d76; }
-  .branches { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 14px; }
-  .branches > div { background: #fff8f0; border-left: 6px solid #bf5700; border-radius: 6px; padding: 10px 16px; font-size: 18px; }
-  .branches b { color: #953800; }
   .impl { margin-top: 16px; background: #effaf2; border-left: 6px solid #1a7f37; border-radius: 6px; padding: 10px 18px 12px; font-size: 19px; line-height: 1.35; }
   .impl .impl-h { margin: 0 0 4px; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #1a7f37; }
   .impl ul { list-style: none; padding-left: 0; margin: 0; }
@@ -91,7 +82,7 @@ Onboard, adopt and monitor them without slowing teams down
 Time: 0:30. Elapsed: 0:30.
 This is the deck the site links to. The original deck is still published at /slides/.
 The talk has two separate parts. First explain the general framework without the Contoso story. Then show Contoso applying it step by step, naming the Part 1 principles at each step.
-Presentation: 27 minutes. Questions: 3 minutes. Backup slides are outside that time.
+Presentation: 24 minutes 30 seconds. Questions: 5 minutes 30 seconds. Appendix slides are outside that time.
 -->
 
 ---
@@ -130,7 +121,7 @@ A fictional story with concrete decisions.
 <!--
 Time: 0:30. Elapsed: 1:00.
 Three minutes of context, nine on principles, thirteen on practice, two to bring it back to the audience, then questions.
-The guide uses the same two-part structure. The complete settings checklist is in backup, not a third section in the middle of the story.
+The guide uses the same two-part structure. The complete settings checklist is in the appendix, not a third section in the middle of the story.
 -->
 
 ---
@@ -225,7 +216,7 @@ Time: 1:45. Elapsed: 5:00.
 This principle underpins all three groups on the next slides.
 The requesting dev team is the sponsor: it shares responsibility for review, testing and keeping the action current. Other consuming teams must use it within its limits and migrate on time.
 This is a self-service product, not a security ticket queue. GitHub issue forms, a developer portal like Backstage or an existing ITSM tool can provide the front door. Developers search the catalog, request what's missing, get a decision and copy the approved snippet.
-Point at the green box, don't read it. Automate every check that doesn't need a human. The full settings checklist is in backup.
+Point at the green box, don't read it. Automate every check that doesn't need a human. The full settings checklist is in the appendix.
 The two turnaround times come from two onboarding routes: 1–2 business days for trusted publishers, 3–5 for everyone else. The next slide explains them.
 -->
 
@@ -333,7 +324,7 @@ The exact policy name is "Allow enterprise, and select non-enterprise, actions a
 Trusted publishers were covered on the previous slide; don't repeat the trade-off here.
 Review the exact SHA in isolation, including action.yml, dist/, pre/post hooks, nested actions, images and runtime downloads. Use GHAS, the Advisory Database, Scorecard and zizmor. AI advice is not an approval.
 Default minimum ages: repository 2 months, SHA 7 days. Security fixes skip the wait, never the review.
-Full allowlist syntax is in backup.
+Full allowlist syntax is in the appendix.
 -->
 
 ---
@@ -420,7 +411,7 @@ Distinguish the catalog (what is approved), the inventory (what workflows declar
 Dependabot doesn't raise alerts for SHA-pinned actions. Replace that safety net with daily checks: advisories for every live action, Dependabot on reviewed copies, and moved tags. Detections run on what actually ran.
 Defaults: an old SHA expires 3 months after a newer version is approved, 30 days after a High finding, the same day for Critical; compromise is blocked immediately. Warn and open migration PRs.
 Keep audit logs for the incident look-back window. Rehearse a tabletop twice a year and a technical drill quarterly.
-Point at the green box, don't read it. The full settings checklist is in backup.
+Point at the green box, don't read it. The full settings checklist is in the appendix.
 Transition: the framework is complete. From here, follow Contoso chronologically; don't repeat the principles as another checklist.
 -->
 
@@ -635,32 +626,16 @@ The last row isn't a principle: it's the operating model, and it's what the next
 
 ---
 
-<p class="section-label">Part 2 · Practice · The new workflow</p>
+<!-- _footer: "" -->
 
-# The new workflow: eight steps, clear owners
-
-<div class="flow">
-<div><b>0 · Bootstrap</b>Inventory, catalog, SHA pins<span class="who">Platform</span></div>
-<div><b>1 · Request</b>Self-service: need, owner, access<span class="who">Dev team (sponsor)</span></div>
-<div><b>2 · Onboarding</b>2a fast track<br>2b full review<span class="who">Platform + sponsor</span></div>
-<div><b>3 · Adoption</b>Teams use approved SHAs<span class="who">Dev teams</span></div>
-<div><b>4 · Monitoring</b>Inventory, run evidence, SIEM alerts<span class="who">Platform + Security</span></div>
-<div><b>5 · Lifecycle</b>5a updates<br>5b vulnerabilities<br>5c removal<span class="who">Platform + dev teams</span></div>
-</div>
-
-<p class="loop">↺ Every new SHA returns to review (5 → 1)</p>
-
-<div class="branches">
-<div><b>6 · Compromise response</b>Block, scope, rotate, recover. Any time a credible signal arrives.<span class="who">Platform + Security, with Infra</span></div>
-<div><b>7 · Break-glass</b>Temporary SHA, two approvers. Expires in 7 days at most.<span class="who">Platform + Security approve</span></div>
-</div>
-
-<div class="takeaway">Platform runs the process. Every step has an owner, and all four teams share one channel.</div>
+![bg contain](../assets/third-party-actions-lifecycle.svg)
 
 <!--
 Time: 1:00. Elapsed: 16:45.
-This is the map for the rest of Part 2. The step numbers and names match the guide and its full diagram (backup slide).
-Steps 0 to 5 are the normal path. 6 and 7 are exceptions that can start from anywhere.
+The new workflow: eight steps, clear owners. This is the original lifecycle diagram from the guide, shown full-slide and repeated in the appendix for reference.
+Follow the vertical flow from bootstrap through the two onboarding lanes to approve and publish, then adoption. Monitoring feeds daily vulnerability checks, version updates and retirement. Every new SHA returns to request and review.
+Platform runs the process. Every step has an owner, and all four teams share one channel.
+Steps 0 to 5 are the normal path. Compromise response can start whenever a credible signal arrives; break-glass is a temporary route into adoption, not a normal next step.
 The Infra team turns approved network destinations into egress rules during onboarding, and sends blocked-egress logs to the SIEM. The security team joins risky requests.
 From here, each slide shows one step: what happened at Contoso, and which principles it applies. Watch the strip at the top.
 -->
@@ -836,25 +811,30 @@ Before the incident, this alert would have sat in a security queue. Now it lands
 
 <p class="moment"><b>November 2025.</b> Fabrikam ships v2.6.0. Payments asks for it.</p>
 
-- **5a · Updates:** v2.6.0 goes through the full review again. Approved in three days.
-- **5b · Vulnerabilities:** daily checks cover both live SHAs.
-- **5c · Removal:** v2.5.0 expires in three months. Teams get warnings and pull requests. In February it leaves the allowlist.
+- **5a · Updates:** full review of v2.6.0. Approved in three days.
+- **5b · Vulnerabilities:** every day, automation checks:
+  - **Dependabot alerts** on every Review GHE copy.
+  - **GitHub Advisory Database** for every live action, trusted publishers included.
+  - **Upstream tags** for unexpected movement.
+- **5c · Removal:** v2.5.0 expires in three months. Warn teams, open migration PRs, then remove it from the allowlist.
 
 </div>
 <div class="applied">
 
-<h3>Principles applied</h3>
-<p><b>Let approvals expire:</b> the old SHA goes 3 months after the new one</p>
-<p><b>Review what runs:</b> every new SHA is reviewed again</p>
-<p><b>Keep watching:</b> advisories, Dependabot on review copies, moved tags</p>
+<h3>When a finding applies</h3>
+<p>Platform investigates and puts the fix through the full review.</p>
+<p><b>High:</b> retire the affected SHA within <b>30 days</b>.</p>
+<p><b>Critical:</b> retire it <b>the same day</b>.</p>
+<p><b>Suspected compromise:</b> straight to <b>Step 6</b>.</p>
 
 </div>
 </div>
 
-<div class="takeaway">Nobody is still on v2.5.0 when it's removed.</div>
+<div class="takeaway">Security fixes skip the queue and the 7-day wait, never the review.</div>
 
 <!--
 Time: 0:45. Elapsed: 21:45.
+Every day, automation checks Dependabot alerts on every Review GHE copy, the GitHub Advisory Database for every live action and approved SHA, trusted publishers included, and upstream tags for movement. Tag movement is an integrity signal to investigate, not automatically a High or Critical vulnerability.
 Migration pull requests land 7 days after a feature release, so a bad release has time to surface; right away for a security fix.
 A High finding shortens the window to 30 days, Critical to the same day. Anything that looks like a compromise goes straight to step 6.
 Warnings arrive as code scanning alerts in each affected repository, where developers already look. The review copy is archived 30 days after its SHA is gone.
@@ -960,75 +940,6 @@ Every break-glass is recorded and reviewed once a month.
 
 ---
 
-<!-- _class: dense -->
-
-<style scoped>
-table { font-size: 19px; }
-th, td { padding: 5px 10px; }
-</style>
-
-<p class="section-label">Part 2 · Practice · Recap</p>
-
-# Every principle, at work
-
-<div class="cols">
-<div>
-
-| Principle | Steps |
-|---|---|
-| <b class="principle">Fastest path</b> | 0, 1–2, 7 |
-| <b class="principle">Only run what's approved</b> | 0, 1–2, 3 |
-| <b class="principle">Pin to a full SHA</b> | 0, 3 |
-| <b class="principle">Review what runs</b> | 1–2, 5 |
-| <b class="principle">Short leash</b> | 3, 6 |
-
-</div>
-<div>
-
-| Principle | Steps |
-|---|---|
-| <b class="principle">Lock down the runner</b> | 1–2, 6 |
-| <b class="principle">Know what you run</b> | 0, 4 |
-| <b class="principle">Keep watching</b> | 4, 5 |
-| <b class="principle">Let approvals expire</b> | 5, 7 |
-| <b class="principle">Be ready</b> | 6 |
-
-</div>
-</div>
-
-<div class="takeaway">The review missed the payload. The other principles limited the damage, and the fast path kept teams on the approved route.</div>
-
-<!--
-Time: 1:00. Elapsed: 25:00.
-The Steps column uses the step numbers from the workflow map.
-This closes the loop with the post-mortem: every gap from March 2025 now has an owner and a step.
-The compromise still happened. What changed was the blast radius, the time to scope it, and a safe way back to delivery.
--->
-
----
-
-# Your first pilot: one organization, clear owners
-
-| Start with | Make the result visible |
-|---|---|
-| **Name the four teams** | A shared channel and a policy owner |
-| **Inventory the risky jobs first** | Actions, SHAs, nested code, secrets and runner access |
-| **Seed a small catalog** | Approved SHAs, sponsors, access limits and request times |
-| **Help teams migrate** | Pinning pull requests and useful policy messages |
-| **Enforce and rehearse** | Warning mode first; then test blocking, scoping and recovery |
-
-<div class="takeaway">Start small. Make the secure route work before making it mandatory.</div>
-
-<!--
-Time: 1:30. Elapsed: 26:30.
-This is the audience's next step, not another telling of Contoso's bootstrap.
-Use the settings checklist in backup for a gap assessment. Prioritize jobs holding secrets, and include Infra from day one.
-Keep the normal request route and break-glass operational before enforcing. Announce each enforcement stage a month ahead.
-The guide contains the full checklist, request form, schema, timing defaults and incident runbook.
--->
-
----
-
 <!-- _class: lead -->
 <!-- _paginate: false -->
 <!-- _footer: "" -->
@@ -1045,17 +956,17 @@ rmoreirao.github.io/securing-third-party-github-actions
 <span style="font-size:18px;color:#656d76">Contoso and Fabrikam are fictional. Licensed under CC BY 4.0.</span>
 
 <!--
-Time: 0:30. Elapsed: 27:00. Questions: 3:00, ending at 30:00.
-Stop the main presentation here. Backup slides are reference material, not a third section of the talk.
+Time: 0:30. Elapsed: 24:30. Questions: 5:30, ending at 30:00.
+Stop the main presentation here. Appendix slides are reference material, not a third section of the talk.
 The guide and this talk express personal views, not official Microsoft guidance.
 -->
 
 ---
 
 <!-- _class: dense -->
-<!-- _footer: "Backup · Reference only" -->
+<!-- _footer: "Appendix · Reference only" -->
 
-# Backup: settings checklist (1/2)
+# Appendix: settings checklist (1/2)
 
 <div class="cols">
 <div>
@@ -1090,7 +1001,7 @@ The guide and this talk express personal views, not official Microsoft guidance.
 </div>
 
 <!--
-Reference only; outside the 27-minute main presentation.
+Reference only; outside the main presentation.
 The green Implementation details boxes in Part 1 show the key items; this and the next slide are the full list, word for word with the guide.
 This and the next slide reproduce the guide's settings checklist item for item.
 SHA pinning applies to all remote actions, internal ones too. Migrate before enabling it.
@@ -1100,7 +1011,7 @@ SHA pinning applies to all remote actions, internal ones too. Migrate before ena
 
 <!-- _class: dense -->
 
-# Backup: settings checklist (2/2)
+# Appendix: settings checklist (2/2)
 
 <div class="cols">
 <div>
@@ -1140,7 +1051,7 @@ New network destinations are declared in the request, approved and recorded in t
 
 <!-- _class: dense -->
 
-# Backup: the allowlist in practice
+# Appendix: the allowlist in practice
 
 | Entry | What it permits or blocks |
 |---|---|
@@ -1169,6 +1080,6 @@ Pinning, daily monitoring and a fast deny entry still apply to trusted publisher
 ![bg contain](../assets/third-party-actions-lifecycle.svg)
 
 <!--
-Reference only: the full lifecycle diagram from the guide. The workflow map in Part 2 is a simplified version with the same step numbers 0–7 and the 2a/2b and 5a/5b/5c branches.
+Reference only: the full lifecycle diagram from the guide, also shown when introducing the new workflow in Part 2, with step numbers 0–7 and the 2a/2b and 5a/5b/5c branches.
 Use the PDF to zoom into the detail.
 -->
